@@ -1,0 +1,10 @@
+{
+  "variants": {
+    "active=true": {
+      "model": "netruscraft:block/craftingaltar"
+    },
+    "active=false": {
+      "model": "netruscraft:block/craftingaltar_inactive"
+    }
+  }
+}

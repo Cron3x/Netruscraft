@@ -1,0 +1,8 @@
+{
+  "parent": "netruscraft:block/layered_block",
+  "textures": {
+    "block": "netruscraft:block/obelisk_orb",
+    "overlay": "netruscraft:block/rune/rune_d",
+    "particle": "netruscraft:block/obelisk_orb"
+  }
+}

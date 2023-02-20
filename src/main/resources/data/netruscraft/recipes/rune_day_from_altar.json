@@ -1,0 +1,33 @@
+{
+  "type": "netruscraft:altar_infusing",
+  "time": "day",
+  "ingredients": [
+    {
+      "item": "minecraft:echo_shard"
+    },
+    {
+      "item": "minecraft:prismarine_shard"
+    },
+    {
+      "item": "minecraft:amethyst_shard"
+    },
+    {
+      "item": "netruscraft:opal"
+    },
+    {
+      "item": "netruscraft:rune_blank"
+    },
+    {
+      "item": "netruscraft:rune_blank"
+    },
+    {
+      "item": "netruscraft:rune_blank"
+    },
+    {
+      "item": "netruscraft:rune_blank"
+    }
+  ],
+  "result": {
+    "item": "netruscraft:rune_time_day"
+  }
+}
