@@ -57,16 +57,18 @@ public class CraftingAltarBlockEntity extends BlockEntity implements Tickable {
 
         for (int i = 0; i < intensity; i++) {
 
-            //world.addParticle(new DustParticleOptions(new Vector3f(0,1,0), 1), pos.getX(),pos.getY(),pos.getZ(), 0, 0,0);
+            //TODO: Add sky Shader, so sky don't get rendered through te particle
+            //TODO: add light to pillar tip
+            //TODO: Implement altar and pillar like door
 
             world.addParticle(
-                    GlowParticleData.createData(centerColor),
+                    GlowParticleData.createData(centerColor, 0.25f, 1f, 36),
                     pos.getX() + 0.5 + ParticleUtil.inRange(-xzOffset / 2, xzOffset / 2), pos.getY() + 3.5 + ParticleUtil.inRange(-0.05, 0.2), pos.getZ() + 0.5 + ParticleUtil.inRange(-xzOffset / 2, xzOffset / 2),
                     0, ParticleUtil.inRange(0.0, 0.05f), 0);
         }
         for (int i = 0; i < intensity; i++) {
             world.addParticle(
-                    GlowParticleData.createData(outerColor),
+                    GlowParticleData.createData(outerColor, 0.25f, 1f, 36),
                     pos.getX() + 0.5 + ParticleUtil.inRange(-xzOffset, xzOffset), pos.getY() + 3.5 + ParticleUtil.inRange(0, 0.7), pos.getZ() + 0.5 + ParticleUtil.inRange(-xzOffset, xzOffset),
                     0, ParticleUtil.inRange(0.0, 0.05f), 0);
         }
@@ -76,7 +78,12 @@ public class CraftingAltarBlockEntity extends BlockEntity implements Tickable {
     public void tick() {
         if (level != null &&level.isClientSide) {
             if (getBlockState().getValue(Blockstates.ACTIVE)){
-                makeParticle(new ParticleColor(255,0,0),new ParticleColor(255,0,150), 10);
+                if(this.day){
+                    makeParticle(new ParticleColor(255,255,255),new ParticleColor(255,155,0), 10);
+                }
+                else{
+                    makeParticle(new ParticleColor(255, 255, 255), new ParticleColor(255, 0, 150), 10);
+                }
             }
             if ( NetrusAPI.isDay() != null ) {
                 if (!ignore_time) {
