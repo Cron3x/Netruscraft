@@ -8,6 +8,7 @@ import de.cron3x.netrus_craft.client.particles.ParticleUtil;
 import de.cron3x.netrus_craft.common.blocks.states.Blockstates;
 import de.cron3x.netrus_craft.common.items.ItemRegister;
 import de.cron3x.netrus_craft.common.recipe.CraftingAltarRecipe;
+import de.cron3x.netrus_craft.common.recipe.CraftingAltarRecipeType;
 import net.minecraft.client.renderer.texture.Tickable;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.NonNullList;
@@ -62,13 +63,13 @@ public class CraftingAltarBlockEntity extends BlockEntity implements Tickable {
             //TODO: Implement altar and pillar like door
 
             world.addParticle(
-                    GlowParticleData.createData(centerColor, 0.25f, 1f, 36),
+                    GlowParticleData.createData(centerColor, 0.25f, 0.7f, 36),
                     pos.getX() + 0.5 + ParticleUtil.inRange(-xzOffset / 2, xzOffset / 2), pos.getY() + 3.5 + ParticleUtil.inRange(-0.05, 0.2), pos.getZ() + 0.5 + ParticleUtil.inRange(-xzOffset / 2, xzOffset / 2),
                     0, ParticleUtil.inRange(0.0, 0.05f), 0);
         }
         for (int i = 0; i < intensity; i++) {
             world.addParticle(
-                    GlowParticleData.createData(outerColor, 0.25f, 1f, 36),
+                    GlowParticleData.createData(outerColor, 0.25f, 0.7f, 36),
                     pos.getX() + 0.5 + ParticleUtil.inRange(-xzOffset, xzOffset), pos.getY() + 3.5 + ParticleUtil.inRange(0, 0.7), pos.getZ() + 0.5 + ParticleUtil.inRange(-xzOffset, xzOffset),
                     0, ParticleUtil.inRange(0.0, 0.05f), 0);
         }
@@ -79,10 +80,10 @@ public class CraftingAltarBlockEntity extends BlockEntity implements Tickable {
         if (level != null &&level.isClientSide) {
             if (getBlockState().getValue(Blockstates.ACTIVE)){
                 if(this.day){
-                    makeParticle(new ParticleColor(255,255,255),new ParticleColor(255,155,0), 10);
+                    makeParticle(new ParticleColor(255,255,255),new ParticleColor(255,150,0), 10);
                 }
                 else{
-                    makeParticle(new ParticleColor(255, 255, 255), new ParticleColor(255, 0, 150), 10);
+                    makeParticle(new ParticleColor(100, 100, 100), new ParticleColor(155, 0, 255), 10);
                 }
             }
             if ( NetrusAPI.isDay() != null ) {
@@ -167,7 +168,7 @@ public class CraftingAltarBlockEntity extends BlockEntity implements Tickable {
             inv.setItem(i, pedItems.get(i-1));
         }
 
-        Optional<CraftingAltarRecipe> recipe = level.getRecipeManager().getRecipeFor(CraftingAltarRecipe.Type.INSTANCE, inv, level);
+        Optional<CraftingAltarRecipe> recipe = level.getRecipeManager().getRecipeFor(CraftingAltarRecipeType.INSTANCE, inv, level);
 
         if (!hasRecipe(altar)) return;
         
@@ -194,7 +195,7 @@ public class CraftingAltarBlockEntity extends BlockEntity implements Tickable {
             
             inv.setItem(i, pedItems.get(i-1));
         }
-        Optional<CraftingAltarRecipe> recipe = level.getRecipeManager().getRecipeFor(CraftingAltarRecipe.Type.INSTANCE, inv, level);
+        Optional<CraftingAltarRecipe> recipe = level.getRecipeManager().getRecipeFor(CraftingAltarRecipeType.INSTANCE, inv, level);
 
         return recipe.isPresent() ; //&& recipe.get().isDay() == altar.isDay()
     }

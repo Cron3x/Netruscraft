@@ -1,5 +1,7 @@
 package de.cron3x.netrus_craft.settings;
 
+
+//TODO: Make available in json file
 public class Settings {
     public static final boolean PEDESTAL_ANIMATION = true;
     public static final float PEDESTAL_SPEED = 0.005f;

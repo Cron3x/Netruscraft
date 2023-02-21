@@ -101,14 +101,9 @@ public class CraftingAltarRecipe implements Recipe<SimpleContainer> {
 
     @Override
     public RecipeType<?> getType() {
-        return Type.INSTANCE;
+        return CraftingAltarRecipeType.INSTANCE;
     }
 
-    public static class Type implements RecipeType<CraftingAltarRecipe> {
-        private Type(){ }
-        public static final Type INSTANCE = new Type();
-        public static final String ID = "altar_infusing";
-    }
     public static class Serializer implements RecipeSerializer<CraftingAltarRecipe> {
         public static final Serializer INSTANCE = new Serializer();
         public static ResourceLocation ID = new ResourceLocation(NetrusCraft.MODID, "altar_infusing");

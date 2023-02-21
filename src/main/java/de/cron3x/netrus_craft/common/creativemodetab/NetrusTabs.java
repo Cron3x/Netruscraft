@@ -18,7 +18,7 @@ public class NetrusTabs {
         MAIN_TAB = event.registerCreativeModeTab(new ResourceLocation(NetrusCraft.MODID, "netrus_tab"), builder -> {
             builder
                     .title(Component.translatable("item_group." + NetrusCraft.MODID + ".netrus_tab"))
-                    .icon(() -> ItemRegister.PEDESTAL_BLOCK_ITEM.get().getDefaultInstance());
+                    .icon(() -> ItemRegister.CRAFTINGALTAR_BLOCK_ITEM.get().getDefaultInstance());
         });
     }
 }
