@@ -1,16 +1,15 @@
 package de.cron3x.netrus_craft.common.blocks;
 
 import de.cron3x.netrus_craft.api.NetrusAPI;
-import de.cron3x.netrus_craft.api.block.CraftingAltarHandler;
+import de.cron3x.netrus_craft.common.blocks.crafting_altar_handler.CraftingAltarParticleHandler;
+import de.cron3x.netrus_craft.common.blocks.crafting_altar_handler.CraftingAltarValidationHandler;
 import de.cron3x.netrus_craft.common.blocks.entity.BlockEntityRegister;
 import de.cron3x.netrus_craft.common.blocks.entity.CraftingAltarBlockEntity;
 import de.cron3x.netrus_craft.common.blocks.entity.CraftingObeliskBlockEntity;
 import de.cron3x.netrus_craft.common.blocks.states.Blockstates;
 import de.cron3x.netrus_craft.common.items.ItemRegister;
-import net.minecraft.client.Minecraft;
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.particles.DustParticleOptions;
-import net.minecraft.core.particles.ParticleTypes;
+import net.minecraft.core.Direction;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.item.ItemEntity;
@@ -18,14 +17,19 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.block.BaseEntityBlock;
 import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.RenderShape;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityTicker;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
+import net.minecraft.world.level.block.state.properties.BlockStateProperties;
+import net.minecraft.world.level.block.state.properties.DoubleBlockHalf;
+import net.minecraft.world.level.block.state.properties.EnumProperty;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.shapes.BooleanOp;
 import net.minecraft.world.phys.shapes.CollisionContext;
@@ -36,20 +40,26 @@ import org.joml.Vector3f;
 
 import javax.annotation.Nullable;
 
+import static de.cron3x.netrus_craft.api.NetrusAPI.preventCreativeDropFromBottomPart;
+
 public class CraftingAltarBlock extends BaseEntityBlock {
     private static final VoxelShape SHAPE_ACTIVE = makeShapeActive();
     private static final VoxelShape SHAPE_INACTIVE = makeShapeInactive();
+    private static final VoxelShape SHAPE_UPPER = Shapes.join(Shapes.empty(), Shapes.box(0, 0, 0, 1, 1.5, 1), BooleanOp.OR);
 
-    public CraftingAltarBlock(Properties properties)
-    {
+
+    public static final EnumProperty<DoubleBlockHalf> HALF = BlockStateProperties.DOUBLE_BLOCK_HALF;
+
+
+    public CraftingAltarBlock(Properties properties) {
         super(properties);
-        registerDefaultState(stateDefinition.any().setValue(Blockstates.ACTIVE, false));
+        registerDefaultState(stateDefinition.any().setValue(Blockstates.ACTIVE, false).setValue(HALF, DoubleBlockHalf.LOWER));
     }
 
     @Override
     protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder) {
         super.createBlockStateDefinition(builder);
-        builder.add(Blockstates.ACTIVE);
+        builder.add(Blockstates.ACTIVE, HALF);
     }
 
     @Nullable
@@ -64,8 +74,12 @@ public class CraftingAltarBlock extends BaseEntityBlock {
         if (!(level.getBlockEntity(pos) instanceof CraftingAltarBlockEntity altar)) return InteractionResult.SUCCESS;
         Boolean isActive = altar.getBlockState().getValue(Blockstates.ACTIVE);
         if (isActive) {
+            if (altar.getBlockState().getValue(BlockStateProperties.DOUBLE_BLOCK_HALF).equals(DoubleBlockHalf.UPPER)){
+                altar = (CraftingAltarBlockEntity) level.getBlockEntity(altar.getBlockPos().below());
+            }
+
             if (player.getMainHandItem().getItem() == ItemRegister.GLASS_WAND.get()) {
-                if (CraftingAltarHandler.isValidAltar(altar)){
+                if (CraftingAltarValidationHandler.isValidAltar(altar)){
                     if (!altar.getIgnoreTime()) {
                         if (altar.getIsDay(altar) != NetrusAPI.isDay()) {
                             altar.setIsDay(NetrusAPI.isDay());
@@ -94,47 +108,47 @@ public class CraftingAltarBlock extends BaseEntityBlock {
         }
         else {
             if (player.getMainHandItem().getItem() == ItemRegister.GLASS_WAND.get()) {
-                if (CraftingAltarHandler.isValidAltar(altar)){
+                if (CraftingAltarValidationHandler.isValidAltar(altar)){
                     state = state.setValue(Blockstates.ACTIVE, true);
-
+                        level.setBlock(pos.above(), state.setValue(HALF, DoubleBlockHalf.UPPER).setValue(Blockstates.ACTIVE, true), 3);
                     level.setBlock(pos, state, 3);
 
                     BlockPos obeliskXPZP = new BlockPos(pos.getX()+4, pos.getY()+1, pos.getZ()+4);
                     BlockPos obeliskXPZN = new BlockPos(pos.getX()+4, pos.getY()+1, pos.getZ()-4);
                     BlockPos obeliskXNZP = new BlockPos(pos.getX()-4, pos.getY()+1, pos.getZ()+4);
                     BlockPos obeliskXNZN = new BlockPos(pos.getX()-4, pos.getY()+1, pos.getZ()-4);
-                    level.setBlock(obeliskXPZP, level.getBlockState(obeliskXPZP).setValue(Blockstates.ACTIVE, true), 3);
-                    level.setBlock(obeliskXPZN, level.getBlockState(obeliskXPZN).setValue(Blockstates.ACTIVE, true), 3);
-                    level.setBlock(obeliskXNZP, level.getBlockState(obeliskXNZP).setValue(Blockstates.ACTIVE, true), 3);
-                    level.setBlock(obeliskXNZN, level.getBlockState(obeliskXNZN).setValue(Blockstates.ACTIVE, true), 3);
 
                     CraftingObeliskBlockEntity eObeliskXPZP = ((CraftingObeliskBlockEntity) level.getBlockEntity(obeliskXPZP));
                     CraftingObeliskBlockEntity eObeliskXPZN = ((CraftingObeliskBlockEntity) level.getBlockEntity(obeliskXPZN));
                     CraftingObeliskBlockEntity eObeliskXNZP = ((CraftingObeliskBlockEntity) level.getBlockEntity(obeliskXNZP));
                     CraftingObeliskBlockEntity eObeliskXNZN = ((CraftingObeliskBlockEntity) level.getBlockEntity(obeliskXNZN));
+
                     eObeliskXPZP.setAltarPos(pos);
                     eObeliskXPZN.setAltarPos(pos);
                     eObeliskXNZP.setAltarPos(pos);
                     eObeliskXNZN.setAltarPos(pos);
+
+                    level.setBlock(obeliskXPZP, level.getBlockState(obeliskXPZP), 2);
+                    level.setBlock(obeliskXPZN, level.getBlockState(obeliskXPZN), 2);
+                    level.setBlock(obeliskXNZP, level.getBlockState(obeliskXNZP), 2);
+                    level.setBlock(obeliskXNZN, level.getBlockState(obeliskXNZN), 2);
+
                     level.setBlockEntity(eObeliskXPZP);
                     level.setBlockEntity(eObeliskXPZN);
                     level.setBlockEntity(eObeliskXNZP);
                     level.setBlockEntity(eObeliskXNZN);
-                    eObeliskXPZP.setChanged();
-                    eObeliskXPZN.setChanged();
-                    eObeliskXNZP.setChanged();
-                    eObeliskXNZN.setChanged();
 
-                    altar.setChanged();
+                    eObeliskXPZP.update();
+                    eObeliskXPZN.update();
+                    eObeliskXNZP.update();
+                    eObeliskXNZN.update();
 
-                    Minecraft.getInstance().level.addParticle(ParticleTypes.FLASH,pos.getX()+.5,pos.getY()+1.5,pos.getZ()+.5, 0, 0,0);
-                    Minecraft.getInstance().level.addParticle(ParticleTypes.END_ROD,pos.getX(),pos.getY()+3,pos.getZ(), 0, 0,0);
-                    Minecraft.getInstance().level.addParticle(ParticleTypes.END_ROD,pos.getX()+1,pos.getY()+2,pos.getZ()+1, 0, 0,0);
-                    Minecraft.getInstance().level.addParticle(ParticleTypes.END_ROD,pos.getX(),pos.getY()+1,pos.getZ()-1, 0, 0,0);
-                    Minecraft.getInstance().level.addParticle(ParticleTypes.END_ROD,pos.getX(),pos.getY()+1,pos.getZ()+1, 0, 0,0);
+                    altar.update();
+
+                    CraftingAltarParticleHandler.validAltar(pos);
                 }
                 else {
-                    Minecraft.getInstance().level.addParticle(new DustParticleOptions(new Vector3f(255,0,0), 255), pos.getX()+.5,pos.getY()+1.5,pos.getZ()+.5, 1, 1,1);
+                    CraftingAltarParticleHandler.invalidAltar(pos);
                 }
             }
         }
@@ -143,9 +157,10 @@ public class CraftingAltarBlock extends BaseEntityBlock {
 
     @Override
     public VoxelShape getShape(BlockState state, BlockGetter getter, BlockPos pos, CollisionContext context) {
+        if (state.getValue(HALF).equals(DoubleBlockHalf.UPPER)) return SHAPE_UPPER;
         return state.getValue(Blockstates.ACTIVE) ? SHAPE_ACTIVE: SHAPE_INACTIVE;
     }
-    public static VoxelShape makeShapeActive(){
+    public static VoxelShape makeShapeInactive(){
         VoxelShape shape = Shapes.empty();
         shape = Shapes.join(shape, Shapes.box(0, 0, 0, 1, 0.125, 1), BooleanOp.OR);
         shape = Shapes.join(shape, Shapes.box(0.0625, 0.125, 0.0625, 0.9375, 0.25, 0.9375), BooleanOp.OR);
@@ -162,18 +177,35 @@ public class CraftingAltarBlock extends BaseEntityBlock {
 
         return shape;
     }
-    public static VoxelShape makeShapeInactive(){
+    public static VoxelShape makeShapeActive(){
         VoxelShape shape = Shapes.empty();
         shape = Shapes.join(shape, Shapes.box(0, 0, 0, 1, 1, 1), BooleanOp.OR);
         return shape;
     }
 
+    @Override
+    public void playerWillDestroy(Level pLevel, BlockPos pPos, BlockState pState, Player pPlayer) {
+        if (!pLevel.isClientSide && pPlayer.isCreative()) {
+            preventCreativeDropFromBottomPart(pLevel, pPos, pState, pPlayer);
+        }
+
+        super.playerWillDestroy(pLevel, pPos, pState, pPlayer);
+    }
 
     @Override
     public @NotNull RenderShape getRenderShape(BlockState state) {
         return RenderShape.MODEL;
     }
 
+    @Override
+    public BlockState updateShape(BlockState pState, Direction pFacing, BlockState pFacingState, LevelAccessor pLevel, BlockPos pCurrentPos, BlockPos pFacingPos) {
+        DoubleBlockHalf doubleblockhalf = pState.getValue(HALF);
+        if (pFacing.getAxis() == Direction.Axis.Y && doubleblockhalf == DoubleBlockHalf.LOWER == (pFacing == Direction.UP)) {
+            return pFacingState.is(this) && pFacingState.getValue(HALF) != doubleblockhalf ? pState : Blocks.AIR.defaultBlockState();
+        } else {
+            return doubleblockhalf == DoubleBlockHalf.LOWER && pFacing == Direction.DOWN && !pState.canSurvive(pLevel, pCurrentPos) ? Blocks.AIR.defaultBlockState() : super.updateShape(pState, pFacing, pFacingState, pLevel, pCurrentPos, pFacingPos);
+        }
+    }
 
     @org.jetbrains.annotations.Nullable
     @Override

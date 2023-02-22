@@ -1,13 +1,13 @@
-package de.cron3x.netrus_craft.api.block;
+package de.cron3x.netrus_craft.common.blocks.crafting_altar_handler;
 
 import de.cron3x.netrus_craft.common.blocks.BlockRegister;
 import de.cron3x.netrus_craft.common.blocks.entity.BlockEntityRegister;
 import de.cron3x.netrus_craft.common.blocks.entity.CraftingAltarBlockEntity;
+import de.cron3x.netrus_craft.common.blocks.entity.CraftingObeliskBlockEntity;
 import de.cron3x.netrus_craft.common.blocks.entity.PedestalBlockEntity;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.NonNullList;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.Items;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
@@ -15,9 +15,11 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.Arrays;
+import java.util.List;
 import java.util.Optional;
 
-public class CraftingAltarHandler {
+public class CraftingAltarValidationHandler {
 
     public enum RUNE {
         NONE(Blocks.POLISHED_BLACKSTONE),
@@ -35,7 +37,7 @@ public class CraftingAltarHandler {
             for (RUNE i : RUNE.values()){
                 if (i.block == block) return Optional.of(i);
             }
-            return Optional.empty();
+            return Optional.of(NONE);
         }
     }
 
@@ -46,10 +48,10 @@ public class CraftingAltarHandler {
 
 
     public static boolean isValidAltar(CraftingAltarBlockEntity altar){
-        CraftingAltarHandler.centerX = altar.getBlockPos().getX();
-        CraftingAltarHandler.centerY = altar.getBlockPos().getY();
-        CraftingAltarHandler.centerZ = altar.getBlockPos().getZ();
-        CraftingAltarHandler.level = altar.getLevel();
+        CraftingAltarValidationHandler.centerX = altar.getBlockPos().getX();
+        CraftingAltarValidationHandler.centerY = altar.getBlockPos().getY();
+        CraftingAltarValidationHandler.centerZ = altar.getBlockPos().getZ();
+        CraftingAltarValidationHandler.level = altar.getLevel();
 
         /* ====> PEDESTALS <==== */
         boolean pXP = isWantedEntityBlock(centerX+3, centerY, centerZ, BlockEntityRegister.PEDESTAL.get());
@@ -124,5 +126,34 @@ public class CraftingAltarHandler {
         items.set(7, iXNZN);
 
         return items;
+    }
+
+    public static List<PedestalBlockEntity> getPedestals(CraftingAltarBlockEntity altar) {
+        Level level = altar.getLevel();
+        int centerX = altar.getBlockPos().getX();
+        int centerY = altar.getBlockPos().getY();
+        int centerZ = altar.getBlockPos().getZ();
+
+        List<PedestalBlockEntity> pedestals = Arrays.asList(new PedestalBlockEntity[8]);
+
+        PedestalBlockEntity iXP = ((PedestalBlockEntity) level.getBlockEntity(new BlockPos(centerX + 3, centerY, centerZ)));
+        PedestalBlockEntity iXN = ((PedestalBlockEntity) level.getBlockEntity(new BlockPos(centerX - 3, centerY, centerZ)));
+        PedestalBlockEntity iZP = ((PedestalBlockEntity) level.getBlockEntity(new BlockPos(centerX, centerY, centerZ + 3)));
+        PedestalBlockEntity iZN = ((PedestalBlockEntity) level.getBlockEntity(new BlockPos(centerX, centerY, centerZ - 3)));
+        PedestalBlockEntity iXPZP = ((PedestalBlockEntity) level.getBlockEntity(new BlockPos(centerX + 2, centerY, centerZ + 2)));
+        PedestalBlockEntity iXPZN = ((PedestalBlockEntity) level.getBlockEntity(new BlockPos(centerX + 2, centerY, centerZ - 2)));
+        PedestalBlockEntity iXNZP = ((PedestalBlockEntity) level.getBlockEntity(new BlockPos(centerX - 2, centerY, centerZ + 2)));
+        PedestalBlockEntity iXNZN = ((PedestalBlockEntity) level.getBlockEntity(new BlockPos(centerX - 2, centerY, centerZ - 2)));
+
+        pedestals.set(0, iXP);
+        pedestals.set(1, iXN);
+        pedestals.set(2, iZP);
+        pedestals.set(3, iZN);
+        pedestals.set(4, iXPZP);
+        pedestals.set(5, iXPZN);
+        pedestals.set(6, iXNZP);
+        pedestals.set(7, iXNZN);
+
+        return pedestals;
     }
 }

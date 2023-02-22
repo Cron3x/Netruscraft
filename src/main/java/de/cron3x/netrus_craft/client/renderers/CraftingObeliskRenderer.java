@@ -26,7 +26,6 @@ public class CraftingObeliskRenderer implements BlockEntityRenderer<CraftingObel
     @Override
     public void render(CraftingObeliskBlockEntity obelisk, float partialTicks, PoseStack poseStack, MultiBufferSource buffers, int light, int overlay) {
         if (Minecraft.getInstance().isPaused()) return;
-        if (!obelisk.getBlockState().getValue(Blockstates.ACTIVE)) return;
         if (obelisk.isRemoved()) return;
 
         if (obelisk.getAltarPos() == null) return;
@@ -34,6 +33,10 @@ public class CraftingObeliskRenderer implements BlockEntityRenderer<CraftingObel
         if (Minecraft.getInstance().level.getBlockState(obelisk.getAltarPos()).hasBlockEntity())
         {
             if (Minecraft.getInstance().level.getBlockEntity(obelisk.getAltarPos()) instanceof CraftingAltarBlockEntity altar){
+                if (!altar.getBlockState().getValue(Blockstates.ACTIVE)) {
+                    obelisk.setAltarPos(null);
+                    return;
+                }
                 if (angle == 3.125f) angle = 0;
                 final Minecraft mc = Minecraft.getInstance();
 

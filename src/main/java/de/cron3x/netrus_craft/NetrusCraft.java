@@ -26,11 +26,12 @@ import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import net.minecraftforge.registries.ForgeRegistries;
 import org.slf4j.Logger;
 
-/*  TODO: Add JEI integration: need to get updated first
+/*
 *   TODO: Patchouli
+*   TODO: Make Obelisk shoot beam at center.
+*   TODO: Add light to tip of Obelisk.
 *
-*
-* */
+*/
 
 // The value here should match an entry in the META-INF/mods.toml file
 @Mod(NetrusCraft.MODID)

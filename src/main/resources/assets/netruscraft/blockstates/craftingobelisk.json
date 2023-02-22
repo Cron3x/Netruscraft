@@ -1,7 +1,10 @@
 {
   "variants": {
-    "": {
-      "model": "netruscraft:block/craftingobelisk"
+    "half=lower": {
+      "model": "netruscraft:block/craftingobelisk_lower"
+    },
+    "half=upper": {
+      "model": "netruscraft:block/craftingobelisk_upper"
     }
   }
 }

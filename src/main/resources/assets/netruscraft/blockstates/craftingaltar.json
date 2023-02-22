@@ -1,10 +1,13 @@
 {
   "variants": {
-    "active=true": {
+    "half=lower,active=true": {
       "model": "netruscraft:block/craftingaltar"
     },
-    "active=false": {
+    "half=lower,active=false": {
       "model": "netruscraft:block/craftingaltar_inactive"
+    },
+    "half=upper": {
+      "model": "netruscraft:block/empty_block"
     }
   }
 }

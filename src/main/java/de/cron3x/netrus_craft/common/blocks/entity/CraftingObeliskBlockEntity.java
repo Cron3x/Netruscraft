@@ -3,13 +3,19 @@ package de.cron3x.netrus_craft.common.blocks.entity;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.NbtUtils;
 import net.minecraft.network.Connection;
 import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
+import net.minecraft.network.syncher.EntityDataAccessor;
+import net.minecraft.network.syncher.EntityDataSerializers;
+import net.minecraft.network.syncher.SynchedEntityData;
+import net.minecraft.world.entity.boss.enderdragon.EndCrystal;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import org.jetbrains.annotations.NotNull;
 
 import javax.annotation.Nullable;
+import java.util.Optional;
 
 public class CraftingObeliskBlockEntity extends BlockEntity {
 
@@ -74,7 +80,7 @@ public class CraftingObeliskBlockEntity extends BlockEntity {
 
     @Override
     public void handleUpdateTag(CompoundTag tag) {
-        //
         this.load(tag);
     }
+
 }
