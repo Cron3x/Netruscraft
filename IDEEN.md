@@ -7,4 +7,9 @@ Rune that allows you to use it without sky vision
 
 2 more runes are needed
 
-cool Items
+Teleporter
+
+Flying rutal
+
+cool Items:
+ - 

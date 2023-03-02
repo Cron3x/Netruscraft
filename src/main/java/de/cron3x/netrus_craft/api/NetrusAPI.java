@@ -16,10 +16,7 @@ public class NetrusAPI {
     public static Boolean isDay(){
         Level world =  Minecraft.getInstance().level;
         if (world == null) return null;
-        //
-        // world.getDayTime() < 12400
-
-        return world.getDayTime() < 12400 || world.getDayTime() > 23950;
+        return world.getDayTime() < 12000 || world.getDayTime() > 23500;
     }
 
     public static void preventCreativeDropFromBottomPart(Level pLevel, BlockPos pPos, BlockState pState, Player pPlayer) {

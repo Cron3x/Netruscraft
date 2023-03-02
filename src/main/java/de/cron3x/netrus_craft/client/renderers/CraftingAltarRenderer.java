@@ -22,6 +22,7 @@ public class CraftingAltarRenderer implements BlockEntityRenderer<CraftingAltarB
         if (!altar.getBlockState().getValue(Blockstates.ACTIVE)) return;
         if (angle == 3.125f) angle = 0;
         if (altar.isRemoved()) return;
+        if (!altar.getShowItem()) return;
         final Minecraft mc = Minecraft.getInstance();
 
         poseStack.translate(.5, 1.625f,.5);

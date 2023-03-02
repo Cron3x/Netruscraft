@@ -58,7 +58,7 @@ public class PedestalBlock extends BaseEntityBlock { //implements SimpleWaterlog
         itementity.lerpMotion(mx,my,mz);
         level.addFreshEntity(itementity);
 
-        pedestal.setChanged();
+        pedestal.update();
 
         return InteractionResult.SUCCESS;
     }

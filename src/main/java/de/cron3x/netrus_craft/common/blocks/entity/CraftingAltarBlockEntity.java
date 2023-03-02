@@ -1,12 +1,17 @@
 package de.cron3x.netrus_craft.common.blocks.entity;
 
 
+import com.google.gson.Gson;
+import com.google.gson.JsonObject;
+import de.cron3x.netrus_craft.api.CustomNBTSaving;
+import de.cron3x.netrus_craft.common.blocks.CraftingAltarBlock;
 import de.cron3x.netrus_craft.common.blocks.crafting_altar_handler.CraftingAltarValidationHandler;
 import de.cron3x.netrus_craft.client.particles.ParticleColor;
 import de.cron3x.netrus_craft.common.blocks.states.Blockstates;
 import de.cron3x.netrus_craft.common.items.ItemRegister;
 import de.cron3x.netrus_craft.common.recipe.CraftingAltarRecipe;
 import de.cron3x.netrus_craft.common.recipe.CraftingAltarRecipeType;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.texture.Tickable;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.NonNullList;
@@ -15,6 +20,7 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.Connection;
 import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
 import net.minecraft.world.SimpleContainer;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
@@ -27,6 +33,7 @@ import net.minecraftforge.items.ItemStackHandler;
 import org.jetbrains.annotations.NotNull;
 
 import javax.annotation.Nullable;
+import java.util.List;
 import java.util.Optional;
 
 import de.cron3x.netrus_craft.api.NetrusAPI;
@@ -41,7 +48,13 @@ public class CraftingAltarBlockEntity extends BlockEntity implements Tickable {
 
     private boolean isCrafting;
 
+    private boolean showResultItem;
+
+    public List<BlockPos> connectedPedestals;
+
     public int time;
+
+
 
     private final ItemStackHandler inventory = new ItemStackHandler(1){
         @Override
@@ -74,21 +87,42 @@ public class CraftingAltarBlockEntity extends BlockEntity implements Tickable {
             }
 
             if ( NetrusAPI.isDay() != null ) {
-                if (!ignore_time) {
-                    if (this.day != NetrusAPI.isDay()) {
-                        this.day = NetrusAPI.isDay();
-                        System.out.println("fn: " + NetrusAPI.isDay());
-                        System.out.println("var: " + this.day);
-                        setChanged();
+                if (this.day != NetrusAPI.isDay()) {
+                    this.day = NetrusAPI.isDay();
+                    System.out.println("fn: " + NetrusAPI.isDay());
+                    System.out.println("var: " + this.day);
+                    update();
+                }
+            }
+
+            if (isCrafting){
+                System.out.println("isCrafting: true");
+                if (connectedPedestals.isEmpty() && this.time >= 15) {
+                    this.setShowItem(true);
+                    this.isCrafting = false;
+                    particleCircle(ParticleTypes.ENCHANT, this.getBlockPos().above(), 1);
+                    update();
+                } else if (this.time >= 50) {
+                    this.time = 0;
+                    BlockPos pedestalPos = this.connectedPedestals.get(0);
+                    this.connectedPedestals.remove(0);
+                    boolean continueCraft = consumeCraftingItem(pedestalPos);
+                    if  (!continueCraft) {
+                        setCraftingResult(this, ItemStack.EMPTY);
+                        this.isCrafting = false;
+                        update();
                     }
+                }
+                if (this.time > 500) {
+                    this.time = 0;
+                    this.setIsCrafting(false);
                 }
             }
         }
     }
 
-    public void craftItem(CraftingAltarBlockEntity altar){
-        isCrafting = true;
-
+    public boolean prepareCrafting(CraftingAltarBlockEntity altar){
+        System.out.println("prepCrafting");
         Level level = altar.level;
         SimpleContainer inv = new SimpleContainer(9);
 
@@ -97,34 +131,48 @@ public class CraftingAltarBlockEntity extends BlockEntity implements Tickable {
         ItemStack indicatorItem = getIsDay(altar) ? ItemRegister.RUNE_TIME_DAY.get().getDefaultInstance() : ItemRegister.RUNE_TIME_NIGHT.get().getDefaultInstance();
         inv.setItem(0,indicatorItem);
 
-        for (int i = 1; i < inv.getContainerSize(); i++){
+        for (int i = 1; i < inv.getContainerSize(); ++i){
             inv.setItem(i, pedItems.get(i-1));
         }
 
         Optional<CraftingAltarRecipe> recipe = level.getRecipeManager().getRecipeFor(CraftingAltarRecipeType.INSTANCE, inv, level);
 
-        if (!hasRecipe(altar)) return;
+        if (!hasRecipe(altar)) return false;
 
-        for (PedestalBlockEntity ped : CraftingAltarValidationHandler.getPedestals(altar)){
-            if (ped.getDisplayItem(true).isEmpty()) continue;
-            particleCircle(ParticleTypes.ENCHANT, ped.getBlockPos(), 0.4);
-            ped.getDisplayItem(false);
-        }
-        //Clear pedestals after is present
-
+        System.out.println("hasRecipe");
         altar.setItem(recipe.get().getResultItem(), false);
-        particleCircle(ParticleTypes.ENCHANT, altar.getBlockPos().above(), 1);
-        isCrafting = false;
+        altar.connectedPedestals = CraftingAltarValidationHandler.getPedestalsPos(altar);
+        altar.isCrafting = true;
+        var a = new CustomNBTSaving().ItemStackToBytes(recipe.get().getResultItem());
+        altar.update();
+        return true;
+    }
+
+    public void setCraftingResult(CraftingAltarBlockEntity altar, ItemStack result){
+        altar.setItem(result, false);
+        particleCircle(ParticleTypes.ASH, altar.getBlockPos().above(), 1);
+    }
+
+    public boolean consumeCraftingItem(BlockPos pedestalPos){
+
+        PedestalBlockEntity pedestal = (PedestalBlockEntity) Minecraft.getInstance().level.getBlockEntity(pedestalPos);
+
+        if (pedestal == null) return false;
+
+        if (pedestal.getDisplayItem(true).isEmpty()) return true;
+        particleCircle(ParticleTypes.ENCHANT, pedestal.getBlockPos(), 0.4);
+        pedestal.getDisplayItem(false);
+        return true;
     }
 
     public boolean hasRecipe(CraftingAltarBlockEntity altar){
+        System.out.println("hasRecipe");
         Level level = altar.level;
         SimpleContainer inv = new SimpleContainer(9);
 
         NonNullList<ItemStack> pedItems = CraftingAltarValidationHandler.getPedestalItems(altar, true);
 
         ItemStack indicatorItem = getIsDay(altar) ? ItemRegister.RUNE_TIME_DAY.get().getDefaultInstance() : ItemRegister.RUNE_TIME_NIGHT.get().getDefaultInstance();
-        System.out.println("isDAy " + getIsDay(altar));
         inv.setItem(0,indicatorItem);
 
         for (int i = 1; i < inv.getContainerSize(); i++){
@@ -132,7 +180,7 @@ public class CraftingAltarBlockEntity extends BlockEntity implements Tickable {
         }
         Optional<CraftingAltarRecipe> recipe = level.getRecipeManager().getRecipeFor(CraftingAltarRecipeType.INSTANCE, inv, level);
 
-        return recipe.isPresent() ; //&& recipe.get().isDay() == altar.isDay()
+        return recipe.isPresent();
     }
 
     public ItemStack setItem(ItemStack itemStack, boolean simulate){
@@ -144,20 +192,6 @@ public class CraftingAltarBlockEntity extends BlockEntity implements Tickable {
     public ItemStack getDisplayItem(boolean simulate) {
         IItemHandler h = lazyItemHandler.orElse(null);
         ItemStack returner = h.extractItem(0, 1, simulate);
-        if(!simulate) update();
-        return returner;
-    }
-
-    public ItemStack getItems(boolean simulate) {
-        IItemHandler h = lazyItemHandler.orElse(null);
-        ItemStack returner = h.extractItem(0, h.getStackInSlot(0).getCount(), simulate);
-        if(!simulate) update();
-        return returner;
-    }
-    public ItemStack getItems(boolean simulate, int amount) {
-        IItemHandler h = lazyItemHandler.orElse(null);
-        if (amount > h.getStackInSlot(0).getCount()) amount = h.getStackInSlot(0).getCount();
-        ItemStack returner = h.extractItem(0, amount, simulate);
         if(!simulate) update();
         return returner;
     }
@@ -190,10 +224,13 @@ public class CraftingAltarBlockEntity extends BlockEntity implements Tickable {
     //*========== Network and save Stuff ==========*\\
     @Override
     public void load(CompoundTag nbt) {
+        System.out.println("Load Stuff");
         super.load(nbt);
         this.ignore_time = nbt.getBoolean("ignore_time");
         this.ignore_ceiling = nbt.getBoolean("ignore_ceiling");
         this.day = nbt.getBoolean("Day");
+        this.connectedPedestals = new CustomNBTSaving().BytesToPedestals(nbt.getByteArray("ConnectedPedestals"));
+        this.showResultItem = nbt.getBoolean("ShowResultItem");
         this.isCrafting = nbt.getBoolean("IsCrafting");
         this.inventory.deserializeNBT(nbt.getCompound("Inventory"));
     }
@@ -211,12 +248,14 @@ public class CraftingAltarBlockEntity extends BlockEntity implements Tickable {
     }
 
     public CompoundTag save(CompoundTag nbt){
+        System.out.println("Saving Stuff");
         nbt.putBoolean("ignore_time", this.ignore_time);
         nbt.putBoolean("ignore_ceiling", this.ignore_ceiling);
-        System.out.println("save::var: " + this.day);
         nbt.putBoolean("Day", this.day);
         nbt.put("Inventory", this.inventory.serializeNBT());
         nbt.putBoolean("IsCrafting", this.isCrafting);
+        nbt.putBoolean("ShowResultItem", this.showResultItem);
+        if (this.connectedPedestals != null && !this.connectedPedestals.isEmpty()) nbt.putByteArray("ConnectedPedestals", new CustomNBTSaving().pedestalsToBytes(this.connectedPedestals));
         return nbt;
     }
 
@@ -242,5 +281,12 @@ public class CraftingAltarBlockEntity extends BlockEntity implements Tickable {
     @Override
     public void handleUpdateTag(CompoundTag tag) {
         this.load(tag);
+    }
+
+    public boolean getShowItem() {
+        return this.showResultItem;
+    }
+    public void setShowItem(boolean state) {
+        this.showResultItem = state;
     }
 }

@@ -156,4 +156,24 @@ public class CraftingAltarValidationHandler {
 
         return pedestals;
     }
+
+    public static List<BlockPos> getPedestalsPos(CraftingAltarBlockEntity altar) {
+        Level level = altar.getLevel();
+        int centerX = altar.getBlockPos().getX();
+        int centerY = altar.getBlockPos().getY();
+        int centerZ = altar.getBlockPos().getZ();
+
+        List<BlockPos> pedestals = Arrays.asList(new BlockPos[8]);
+
+        pedestals.set(0, new BlockPos(centerX + 3, centerY, centerZ));
+        pedestals.set(1, new BlockPos(centerX - 3, centerY, centerZ));
+        pedestals.set(2, new BlockPos(centerX, centerY, centerZ + 3));
+        pedestals.set(3, new BlockPos(centerX, centerY, centerZ - 3));
+        pedestals.set(4, new BlockPos(centerX + 2, centerY, centerZ + 2));
+        pedestals.set(5, new BlockPos(centerX + 2, centerY, centerZ - 2));
+        pedestals.set(6, new BlockPos(centerX - 2, centerY, centerZ + 2));
+        pedestals.set(7, new BlockPos(centerX - 2, centerY, centerZ - 2));
+
+        return pedestals;
+    }
 }
