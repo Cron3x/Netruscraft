@@ -27,6 +27,7 @@ import net.minecraftforge.items.ItemStackHandler;
 import org.jetbrains.annotations.NotNull;
 
 import javax.annotation.Nullable;
+import java.util.List;
 import java.util.Optional;
 
 import de.cron3x.netrus_craft.api.NetrusAPI;
@@ -42,6 +43,8 @@ public class CraftingAltarBlockEntity extends BlockEntity implements Tickable {
     private boolean isCrafting;
 
     public int time;
+
+    private List<BlockPos> pedestals;
 
     private final ItemStackHandler inventory = new ItemStackHandler(1){
         @Override
@@ -83,6 +86,20 @@ public class CraftingAltarBlockEntity extends BlockEntity implements Tickable {
                     }
                 }
             }
+
+            if ( isCrafting ) {
+                if (!this.pedestals.isEmpty()) {
+                    if (time >= 40){
+                        this.time = 0;
+                        this.isCrafting = false;
+                    }
+                } else {
+                    if (time >= 20) {
+                        this.time = 0;
+                        this.isCrafting = false;
+                    }
+                }
+            }
         }
     }
 
@@ -110,10 +127,9 @@ public class CraftingAltarBlockEntity extends BlockEntity implements Tickable {
             particleCircle(ParticleTypes.ENCHANT, ped.getBlockPos(), 0.4);
             ped.getDisplayItem(false);
         }
-        //Clear pedestals after is present
 
         altar.setItem(recipe.get().getResultItem(), false);
-        particleCircle(ParticleTypes.ENCHANT, altar.getBlockPos().above(), 1);
+        particleCircle(ParticleTypes.FLASH, altar.getBlockPos().above(), 1);
         isCrafting = false;
     }
 
@@ -195,6 +211,7 @@ public class CraftingAltarBlockEntity extends BlockEntity implements Tickable {
         this.ignore_ceiling = nbt.getBoolean("ignore_ceiling");
         this.day = nbt.getBoolean("Day");
         this.isCrafting = nbt.getBoolean("IsCrafting");
+        this.time = nbt.getInt("Time");
         this.inventory.deserializeNBT(nbt.getCompound("Inventory"));
     }
 
@@ -217,6 +234,7 @@ public class CraftingAltarBlockEntity extends BlockEntity implements Tickable {
         nbt.putBoolean("Day", this.day);
         nbt.put("Inventory", this.inventory.serializeNBT());
         nbt.putBoolean("IsCrafting", this.isCrafting);
+        nbt.putInt("Time", this.time);
         return nbt;
     }
 
