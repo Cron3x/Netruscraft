@@ -8,15 +8,21 @@ import de.cron3x.netrus_craft.client.renderers.PedestalRenderer;
 import de.cron3x.netrus_craft.common.blocks.BlockRegister;
 import de.cron3x.netrus_craft.common.blocks.entity.BlockEntityRegister;
 import de.cron3x.netrus_craft.common.creativemodetab.TabRegister;
+import de.cron3x.netrus_craft.common.events.ClickItemEvent;
 import de.cron3x.netrus_craft.common.items.ItemRegister;
+import de.cron3x.netrus_craft.common.items.infusion_whetstones.RawWhetstone;
 import de.cron3x.netrus_craft.common.recipe.RecipeRegister;
 import net.minecraft.client.Minecraft;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.client.event.EntityRenderersEvent;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.BuildCreativeModeTabContentsEvent;
+import net.minecraftforge.event.ItemStackedOnOtherEvent;
 import net.minecraftforge.event.server.ServerStartingEvent;
+import net.minecraftforge.eventbus.api.Event;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
@@ -95,12 +101,18 @@ public class NetrusCraft
             event.accept(ItemRegister.RUNE_TIME_MORNING);
             event.accept(ItemRegister.RUNE_TIME_NIGHT);
             event.accept(ItemRegister.RUNE_BLANK);
+            event.accept(ItemRegister.WHETSTONE_FIRE);
+            event.accept(ItemRegister.WHETSTONE_POISON);
+            event.accept(ItemRegister.WHETSTONE_HOLY);
+            event.accept(ItemRegister.WHETSTONE_BLEED);
+            event.accept(ItemRegister.WHETSTONE_LIGHTNING);
+            event.accept(ItemRegister.WHETSTONE_ROT);
+            event.accept(ItemRegister.WHETSTONE_RAW);
         }
     }
     // You can use EventBusSubscriber to automatically register all static methods in the class annotated with @SubscribeEvent
     @Mod.EventBusSubscriber(modid = MODID, bus = Mod.EventBusSubscriber.Bus.MOD, value = Dist.CLIENT)
-    public static class ClientModEvents
-    {
+    public static class ClientModEvents {
         @SubscribeEvent
         public static void registerRenderers(EntityRenderersEvent.RegisterRenderers event) {
             event.registerBlockEntityRenderer(BlockEntityRegister.PEDESTAL.get(), PedestalRenderer::new);
@@ -109,11 +121,12 @@ public class NetrusCraft
         }
 
         @SubscribeEvent
-        public static void onClientSetup(FMLClientSetupEvent event)
-        {
+        public static void onClientSetup(FMLClientSetupEvent event) {
             // Some client setup code
             LOGGER.info("HELLO FROM CLIENT SETUP");
             LOGGER.info("MINECRAFT NAME >> {}", Minecraft.getInstance().getUser().getName());
         }
+
+
     }
 }
