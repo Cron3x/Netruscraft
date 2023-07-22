@@ -1,10 +1,7 @@
 package de.cron3x.netrus_craft.common.blocks.entity;
 
 
-import com.google.gson.Gson;
-import com.google.gson.JsonObject;
 import de.cron3x.netrus_craft.api.CustomNBTSaving;
-import de.cron3x.netrus_craft.common.blocks.CraftingAltarBlock;
 import de.cron3x.netrus_craft.common.blocks.crafting_altar_handler.CraftingAltarValidationHandler;
 import de.cron3x.netrus_craft.client.particles.ParticleColor;
 import de.cron3x.netrus_craft.common.blocks.states.Blockstates;
@@ -20,7 +17,6 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.Connection;
 import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
 import net.minecraft.world.SimpleContainer;
-import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
@@ -37,6 +33,7 @@ import java.util.List;
 import java.util.Optional;
 
 import de.cron3x.netrus_craft.api.NetrusAPI;
+import oshi.util.tuples.Pair;
 
 import static de.cron3x.netrus_craft.common.blocks.crafting_altar_handler.CraftingAltarParticleHandler.*;
 
@@ -52,7 +49,7 @@ public class CraftingAltarBlockEntity extends BlockEntity implements Tickable {
 
     public List<BlockPos> connectedPedestals;
 
-    public int time;
+    public int crafting_timer;
 
 
 
@@ -74,7 +71,7 @@ public class CraftingAltarBlockEntity extends BlockEntity implements Tickable {
 
     @Override
     public void tick() {
-        ++this.time;
+        ++this.crafting_timer;
         if (level != null && level.isClientSide) {
             if (getBlockState().getValue(Blockstates.ACTIVE) && getBlockState().getValue(BlockStateProperties.DOUBLE_BLOCK_HALF).equals(DoubleBlockHalf.LOWER)){
                 if(this.day){
@@ -96,25 +93,35 @@ public class CraftingAltarBlockEntity extends BlockEntity implements Tickable {
             }
 
             if (isCrafting){
-                System.out.println("isCrafting: true");
-                if (connectedPedestals.isEmpty() && this.time >= 15) {
+                System.out.println("isCrafting: true ("+ this.crafting_timer +")");
+                if (connectedPedestals.isEmpty() && this.crafting_timer >= 15) {
+                    System.out.println("Empty now: if (connectedPedestals.isEmpty() && this.crafting_timer >= 15)");
                     this.setShowItem(true);
                     this.isCrafting = false;
                     particleCircle(ParticleTypes.ENCHANT, this.getBlockPos().above(), 1);
+
+                    for (BlockPos pedestalPos : this.connectedPedestals) {
+                        consumeraftingItem(pedestalPos);
+                    }
+
                     update();
-                } else if (this.time >= 50) {
-                    this.time = 0;
+                } else if (this.crafting_timer >= 50) {
+                    System.out.println("timer >= 50");
+                    this.crafting_timer = 0;
                     BlockPos pedestalPos = this.connectedPedestals.get(0);
                     this.connectedPedestals.remove(0);
-                    boolean continueCraft = consumeCraftingItem(pedestalPos);
+                    this.connectedPedestals.set(this.connectedPedestals.size()-1, pedestalPos);
+                    boolean continueCraft = hideCraftingItem(pedestalPos);
                     if  (!continueCraft) {
                         setCraftingResult(this, ItemStack.EMPTY);
                         this.isCrafting = false;
                         update();
                     }
                 }
-                if (this.time > 500) {
-                    this.time = 0;
+
+                if (this.crafting_timer > 55) {
+                    System.out.println("timer > 500");
+                    this.crafting_timer = 0;
                     this.setIsCrafting(false);
                 }
             }
@@ -140,10 +147,10 @@ public class CraftingAltarBlockEntity extends BlockEntity implements Tickable {
         if (!hasRecipe(altar)) return false;
 
         System.out.println("hasRecipe");
-        altar.setItem(recipe.get().getResultItem(), false);
+        altar.setItem(recipe.get().getResultItem(this.getLevel().registryAccess()), false);
         altar.connectedPedestals = CraftingAltarValidationHandler.getPedestalsPos(altar);
         altar.isCrafting = true;
-        var a = new CustomNBTSaving().ItemStackToBytes(recipe.get().getResultItem());
+        //var a = new CustomNBTSaving().ItemStackToBytes(recipe.get().getResultItem(this.getLevel().registryAccess()));
         altar.update();
         return true;
     }
@@ -153,7 +160,19 @@ public class CraftingAltarBlockEntity extends BlockEntity implements Tickable {
         particleCircle(ParticleTypes.ASH, altar.getBlockPos().above(), 1);
     }
 
-    public boolean consumeCraftingItem(BlockPos pedestalPos){
+    public boolean consumeraftingItem(BlockPos pedestalPos){
+
+        PedestalBlockEntity pedestal = (PedestalBlockEntity) Minecraft.getInstance().level.getBlockEntity(pedestalPos);
+
+        if (pedestal == null) return false;
+
+        if (pedestal.getDisplayItem(true).isEmpty()) return true;
+        particleCircle(ParticleTypes.ENCHANT, pedestal.getBlockPos(), 0.4);
+        pedestal.setItem(ItemStack.EMPTY, false);
+        return true;
+    }
+
+    public boolean hideCraftingItem(BlockPos pedestalPos){
 
         PedestalBlockEntity pedestal = (PedestalBlockEntity) Minecraft.getInstance().level.getBlockEntity(pedestalPos);
 

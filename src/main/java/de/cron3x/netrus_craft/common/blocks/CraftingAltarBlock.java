@@ -78,7 +78,7 @@ public class CraftingAltarBlock extends BaseEntityBlock {
                 altar = (CraftingAltarBlockEntity) level.getBlockEntity(altar.getBlockPos().below());
             }
 
-            System.out.println("altar.getShowItem(): "+altar.getShowItem());
+            System.out.println("altar.getShowItem(): " + altar.getShowItem());
 
             if (player.getMainHandItem().getItem() == ItemRegister.GLASS_WAND.get()) {
                 if (CraftingAltarValidationHandler.isValidAltar(altar)){

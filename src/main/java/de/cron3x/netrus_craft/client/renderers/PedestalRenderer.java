@@ -7,6 +7,7 @@ import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.block.model.ItemTransforms;
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderer;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
+import net.minecraft.world.item.ItemDisplayContext;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import org.joml.Quaternionf;
@@ -39,7 +40,7 @@ public class PedestalRenderer implements BlockEntityRenderer<PedestalBlockEntity
         }
         poseStack.pushPose();
 
-        mc.getItemRenderer().renderStatic(item, ItemTransforms.TransformType.GROUND, light, overlay, poseStack, buffers, 1);
+        mc.getItemRenderer().renderStatic(item, ItemDisplayContext.GROUND, light, overlay, poseStack, buffers, pedestal.getLevel(), 1);
 
         poseStack.popPose();
     }

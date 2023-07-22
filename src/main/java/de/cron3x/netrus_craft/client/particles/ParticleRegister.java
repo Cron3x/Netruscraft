@@ -21,7 +21,7 @@ public class ParticleRegister {
 
     @SubscribeEvent
     public static void registerFactories(RegisterParticleProvidersEvent evt) {
-        evt.register(GLOW_TYPE.get(), GlowParticleData::new);
+        evt.registerSpriteSet(GLOW_TYPE.get(), GlowParticleData::new);
         Minecraft.getInstance().particleEngine.register(GLOW_TYPE.get(), GlowParticleData::new);
     }
 

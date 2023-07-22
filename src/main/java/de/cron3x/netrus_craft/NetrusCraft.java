@@ -2,20 +2,20 @@ package de.cron3x.netrus_craft;
 
 import com.mojang.logging.LogUtils;
 import de.cron3x.netrus_craft.client.particles.ParticleRegister;
-import de.cron3x.netrus_craft.common.blocks.BlockRegister;
-import de.cron3x.netrus_craft.common.blocks.entity.BlockEntityRegister;
-import de.cron3x.netrus_craft.common.creativemodetab.NetrusTabs;
-import de.cron3x.netrus_craft.common.items.ItemRegister;
+import de.cron3x.netrus_craft.client.renderers.CraftingAltarRenderer;
 import de.cron3x.netrus_craft.client.renderers.CraftingObeliskRenderer;
 import de.cron3x.netrus_craft.client.renderers.PedestalRenderer;
-import de.cron3x.netrus_craft.client.renderers.CraftingAltarRenderer;
+import de.cron3x.netrus_craft.common.blocks.BlockRegister;
+import de.cron3x.netrus_craft.common.blocks.entity.BlockEntityRegister;
+import de.cron3x.netrus_craft.common.creativemodetab.TabRegister;
+import de.cron3x.netrus_craft.common.items.ItemRegister;
 import de.cron3x.netrus_craft.common.recipe.RecipeRegister;
 import net.minecraft.client.Minecraft;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.client.event.EntityRenderersEvent;
 import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.event.CreativeModeTabEvent;
+import net.minecraftforge.event.BuildCreativeModeTabContentsEvent;
 import net.minecraftforge.event.server.ServerStartingEvent;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -51,6 +51,7 @@ public class NetrusCraft
         modEventBus.addListener(this::commonSetup);
         modEventBus.addListener(this::addCreative);
 
+        TabRegister.CREATIVE_MODE_TAB_DEFERRED_REGISTER.register(modEventBus);
         BlockRegister.BLOCKS.register(modEventBus);
         ItemRegister.ITEMS.register(modEventBus);
         BlockEntityRegister.BLOCK_ENTITIES.register(modEventBus);
@@ -79,8 +80,8 @@ public class NetrusCraft
     }
 
 
-    private void addCreative(CreativeModeTabEvent.BuildContents event) {
-        if (event.getTab() == NetrusTabs.MAIN_TAB) {
+    private void addCreative(BuildCreativeModeTabContentsEvent event) {
+        if (event.getTab() == TabRegister.MAIN_TAB.get()) {
 
             event.accept(ItemRegister.PEDESTAL_BLOCK_ITEM);
             event.accept(ItemRegister.CRAFTINGALTAR_BLOCK_ITEM);
