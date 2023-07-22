@@ -18,7 +18,6 @@ import static de.cron3x.netrus_craft.settings.Settings.PEDESTAL_SPEED;
 public class PedestalRenderer implements BlockEntityRenderer<PedestalBlockEntity> {
     private float angle = 0f;
     private final BlockEntityRendererProvider.Context context;
-    private static final ItemStack ITEM = new ItemStack(Items.ECHO_SHARD); //Get from inv
     public PedestalRenderer(BlockEntityRendererProvider.Context context) {
         this.context = context;
     }
@@ -29,7 +28,7 @@ public class PedestalRenderer implements BlockEntityRenderer<PedestalBlockEntity
         if (angle == 3.125f) angle = 0;
         if (pedestal.isRemoved()) return;
         final Minecraft mc = Minecraft.getInstance();
-        final ItemStack item = pedestal.getDisplayItem(true);
+        final ItemStack item = pedestal.getDisplayItem(true, false);
 
         poseStack.translate(.5f, 1.15f,.5f);
         poseStack.scale(1,1,1);

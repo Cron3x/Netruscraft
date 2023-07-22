@@ -14,12 +14,7 @@ import org.joml.Vector3f;
 public class CraftingAltarParticleHandler {
     private static final Level level = Minecraft.getInstance().level;
 
-    //WT+
-    // #######
-    //
-    //
-    //
-    // What Is This
+    //WTF What Is This
     /*public static void craftingParticles(BlockPos altarPos) {
         BlockPos obeliskXPZP = new BlockPos(altarPos.getX()+4, altarPos.getY()+1, altarPos.getZ()+4);
         BlockPos obeliskXPZN = new BlockPos(altarPos.getX()+4, altarPos.getY()+1, altarPos.getZ()-4);
@@ -37,7 +32,7 @@ public class CraftingAltarParticleHandler {
     }*/
 
     public static void particleCircle(ParticleOptions particleOptions, BlockPos origin, double radius){
-        double curAngle =  0;
+        double curAngle = 0;
         double particleX;
         double particleZ;
 
@@ -67,7 +62,6 @@ public class CraftingAltarParticleHandler {
         double xzOffset = 0.25;
 
         for (int i = 0; i < intensity; i++) {
-
             //TODO: add light to pillar tip
             //TODO: Implement altar like door
 
