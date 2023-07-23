@@ -1,7 +1,6 @@
 package de.cron3x.netrus_craft.common.items;
 
 import de.cron3x.netrus_craft.NetrusCraft;
-import de.cron3x.netrus_craft.common.items.infusion_whetstones.*;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.Item;
 import net.minecraftforge.registries.DeferredRegister;
@@ -30,11 +29,6 @@ public final class ItemRegister {
     public static final RegistryObject<Item> RUNE_TIME_EVENING = ITEMS.register("rune_time_evening", () -> new Item(new Item.Properties()));
     public static final RegistryObject<Item> RUNE_TIME_MORNING = ITEMS.register("rune_time_morning", () -> new Item(new Item.Properties()));
 
-    public static final RegistryObject<Item> WHETSTONE_RAW = ITEMS.register("whetstone_raw", () -> new RawWhetstone((new Item.Properties()).stacksTo(1)));
-    public static final RegistryObject<Item> WHETSTONE_FIRE = ITEMS.register("whetstone_fire", () -> new FireWhetstone((new Item.Properties()).stacksTo(1)));
-    public static final RegistryObject<Item> WHETSTONE_POISON = ITEMS.register("whetstone_poison", () ->new PoisonWhetstone((new Item.Properties()).stacksTo(1)));
-    public static final RegistryObject<Item> WHETSTONE_BLEED = ITEMS.register("whetstone_bleed", () -> new BleedWhetstone((new Item.Properties()).stacksTo(1)));
-    public static final RegistryObject<Item> WHETSTONE_ROT = ITEMS.register("whetstone_rot", () -> new RotWhetstone((new Item.Properties()).stacksTo(1)));
-    public static final RegistryObject<Item> WHETSTONE_HOLY = ITEMS.register("whetstone_holy", () -> new HolyWhetstone((new Item.Properties()).stacksTo(1)));
-    public static final RegistryObject<Item> WHETSTONE_LIGHTNING = ITEMS.register("whetstone_lightning", () -> new LightningWhetstone((new Item.Properties()).stacksTo(1)));
-}
+    public static final RegistryObject<Item> WHETSTONE = ITEMS.register("whetstone", () -> new WhetstoneItem((new Item.Properties()).stacksTo(1)));
+
+    }

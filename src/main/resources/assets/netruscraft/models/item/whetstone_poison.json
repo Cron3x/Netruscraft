@@ -1,5 +1,5 @@
 {
-  "parent": "minecraft:item/generated",
+  "parent": "netruscraft:item/whetstone",
   "textures": {
     "layer0": "netruscraft:item/whetstone_poison"
   }
