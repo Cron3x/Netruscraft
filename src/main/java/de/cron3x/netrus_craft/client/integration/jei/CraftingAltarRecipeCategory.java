@@ -6,7 +6,6 @@ import de.cron3x.netrus_craft.common.recipe.CraftingAltarRecipe;
 import mezz.jei.api.constants.VanillaTypes;
 import mezz.jei.api.gui.builder.IRecipeLayoutBuilder;
 import mezz.jei.api.gui.drawable.IDrawable;
-import mezz.jei.api.gui.ingredient.IRecipeSlotTooltipCallback;
 import mezz.jei.api.helpers.IGuiHelper;
 import mezz.jei.api.recipe.IFocusGroup;
 import mezz.jei.api.recipe.RecipeIngredientRole;
@@ -66,6 +65,6 @@ public class CraftingAltarRecipeCategory implements IRecipeCategory<CraftingAlta
         builder.addSlot(RecipeIngredientRole.INPUT,49,70).addIngredients(recipe.getIngredients().get(7));
         builder.addSlot(RecipeIngredientRole.INPUT,36,43).addIngredients(recipe.getIngredients().get(3));
 
-        builder.addSlot(RecipeIngredientRole.OUTPUT,76,43).addItemStack(recipe.getResultItem()).setBackground(dayTime, -70,-35);
+        builder.addSlot(RecipeIngredientRole.OUTPUT,76,43).addItemStack(recipe.output).setBackground(dayTime, -70,-35);
     }
 }

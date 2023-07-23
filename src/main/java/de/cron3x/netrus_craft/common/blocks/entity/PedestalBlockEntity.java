@@ -39,7 +39,6 @@ public class PedestalBlockEntity extends BlockEntity {
         IItemHandler h = optional.orElse(null);
         ItemStack returner = h.extractItem(0,1,simulate);
         if(!simulate) update();
-        //System.out.println(""+returner);
         return returner;
     }
 

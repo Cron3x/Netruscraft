@@ -9,6 +9,7 @@ import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.block.model.ItemTransforms;
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderer;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
+import net.minecraft.world.item.ItemDisplayContext;
 import net.minecraft.world.item.ItemStack;
 
 public class CraftingAltarRenderer implements BlockEntityRenderer<CraftingAltarBlockEntity> {
@@ -22,6 +23,7 @@ public class CraftingAltarRenderer implements BlockEntityRenderer<CraftingAltarB
         if (!altar.getBlockState().getValue(Blockstates.ACTIVE)) return;
         if (angle == 3.125f) angle = 0;
         if (altar.isRemoved()) return;
+        if (!altar.getShowItem()) return;
         final Minecraft mc = Minecraft.getInstance();
 
         poseStack.translate(.5, 1.625f,.5);
@@ -30,8 +32,7 @@ public class CraftingAltarRenderer implements BlockEntityRenderer<CraftingAltarB
 
         ItemStack item = altar.getDisplayItem(true);
 
-
-        mc.getItemRenderer().renderStatic(item, ItemTransforms.TransformType.GROUND, 255, overlay, poseStack, buffers, 1);
+        mc.getItemRenderer().renderStatic(item, ItemDisplayContext.GROUND, light, overlay, poseStack, buffers, altar.getLevel(), 1);
 
         poseStack.popPose();
     }

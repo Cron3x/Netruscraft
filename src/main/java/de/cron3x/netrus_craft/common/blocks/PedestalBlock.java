@@ -58,7 +58,7 @@ public class PedestalBlock extends BaseEntityBlock { //implements SimpleWaterlog
         itementity.lerpMotion(mx,my,mz);
         level.addFreshEntity(itementity);
 
-        pedestal.setChanged();
+        pedestal.update();
 
         return InteractionResult.SUCCESS;
     }
@@ -95,13 +95,13 @@ public class PedestalBlock extends BaseEntityBlock { //implements SimpleWaterlog
     }
 
     @Override
-    public void onRemove(BlockState p_60515_, Level level, BlockPos pos, BlockState p_60518_, boolean p_60519_) {
-        if(p_60515_.getBlock() != p_60518_.getBlock()) {
+    public void onRemove(BlockState p_60515_, Level level, BlockPos pos, BlockState state, boolean p_60519_) {
+        if(p_60515_.getBlock() != state.getBlock()) {
             if (level.getBlockEntity(pos) instanceof PedestalBlockEntity pedestal){
                 ItemEntity itementity = new ItemEntity(level, pos.getX(), pos.getY(), pos.getZ(), pedestal.getDisplayItem(false));
                 level.addFreshEntity(itementity);
             }
-            super.onRemove(p_60515_, level, pos, p_60518_, p_60519_);
+            super.onRemove(p_60515_, level, pos, state, p_60519_);
         }
     }
 }

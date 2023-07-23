@@ -78,23 +78,20 @@ public class CraftingAltarBlock extends BaseEntityBlock {
                 altar = (CraftingAltarBlockEntity) level.getBlockEntity(altar.getBlockPos().below());
             }
 
+            System.out.println("altar.getShowItem(): " + altar.getShowItem());
+
             if (player.getMainHandItem().getItem() == ItemRegister.GLASS_WAND.get()) {
                 if (CraftingAltarValidationHandler.isValidAltar(altar)){
-                    if (!altar.getIgnoreTime()) {
-                        if (altar.getIsDay(altar) != NetrusAPI.isDay()) {
-                            altar.setIsDay(NetrusAPI.isDay());
-                            altar.setChanged();
-                        }
-                    }
-                    if (altar.getDisplayItem(true).isEmpty()){
+                    if (!altar.getShowItem()){
                         if (altar.hasRecipe(altar)) {
                             altar.setChanged();
-                            altar.craftItem(altar);
-                        }
-                    }
+                            boolean ret = altar.prepareCrafting(altar);
+                            System.out.println("altar prepCraft :: " + ret);
+                        } else System.out.println("!altar.hasRecipe(altar)");
+                    } else System.out.println("not empty: " + altar.getDisplayItem(true).getItem());
                 }
             }
-            else if (player.getMainHandItem().isEmpty()) {
+            else if (player.getMainHandItem().isEmpty() && altar.getShowItem()) {
                 ItemStack oItem = altar.getDisplayItem(false);
 
                 altar.setItem(ItemStack.EMPTY, false);
@@ -102,7 +99,7 @@ public class CraftingAltarBlock extends BaseEntityBlock {
                 ItemEntity itementity = new ItemEntity(level, player.getX(), player.getY(), player.getZ(), oItem);
                 level.addFreshEntity(itementity);
 
-                altar.setChanged();
+                altar.update();
             }
             return InteractionResult.SUCCESS;
         }

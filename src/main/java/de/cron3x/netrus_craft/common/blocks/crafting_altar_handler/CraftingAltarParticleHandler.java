@@ -14,7 +14,13 @@ import org.joml.Vector3f;
 public class CraftingAltarParticleHandler {
     private static final Level level = Minecraft.getInstance().level;
 
-    public static void craftingParticles(BlockPos altarPos) {
+    //WT+
+    // #######
+    //
+    //
+    //
+    // What Is This
+    /*public static void craftingParticles(BlockPos altarPos) {
         BlockPos obeliskXPZP = new BlockPos(altarPos.getX()+4, altarPos.getY()+1, altarPos.getZ()+4);
         BlockPos obeliskXPZN = new BlockPos(altarPos.getX()+4, altarPos.getY()+1, altarPos.getZ()-4);
         BlockPos obeliskXNZP = new BlockPos(altarPos.getX()-4, altarPos.getY()+1, altarPos.getZ()+4);
@@ -28,7 +34,7 @@ public class CraftingAltarParticleHandler {
         BlockPos pedestalXPZP = new BlockPos(altarPos.getX()+2, altarPos.getY()+0.5, altarPos.getZ()+2);
         BlockPos pedestalXNZP = new BlockPos(altarPos.getX()-2, altarPos.getY()+0.5, altarPos.getZ()+2);
         BlockPos pedestalXNZN = new BlockPos(altarPos.getX()-2, altarPos.getY()+0.5, altarPos.getZ()-2);
-    }
+    }*/
 
     public static void particleCircle(ParticleOptions particleOptions, BlockPos origin, double radius){
         double curAngle =  0;

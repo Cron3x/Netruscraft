@@ -7,10 +7,12 @@ import de.cron3x.netrus_craft.common.blocks.entity.CraftingAltarBlockEntity;
 import de.cron3x.netrus_craft.common.items.ItemRegister;
 import it.unimi.dsi.fastutil.ints.IntList;
 import net.minecraft.core.NonNullList;
+import net.minecraft.core.RegistryAccess;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.GsonHelper;
 import net.minecraft.world.SimpleContainer;
+import net.minecraft.world.inventory.ContainerLevelAccess;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.*;
@@ -26,7 +28,7 @@ import org.jetbrains.annotations.Nullable;
 public class CraftingAltarRecipe implements Recipe<SimpleContainer> {
 
     private final ResourceLocation id;
-    private final ItemStack output;
+    public final ItemStack output;
     private final NonNullList<Ingredient> recipeItems;
     private final boolean isDay;
 
@@ -71,7 +73,7 @@ public class CraftingAltarRecipe implements Recipe<SimpleContainer> {
     }
 
     @Override
-    public ItemStack assemble(SimpleContainer pContainer) {
+    public ItemStack assemble(SimpleContainer pContainer, RegistryAccess p_267165_) {
         return output;
     }
 
@@ -81,7 +83,7 @@ public class CraftingAltarRecipe implements Recipe<SimpleContainer> {
     }
 
     @Override
-    public ItemStack getResultItem() {
+    public ItemStack getResultItem(RegistryAccess p_267052_) {
         return output.copy();
     }
 
@@ -134,7 +136,7 @@ public class CraftingAltarRecipe implements Recipe<SimpleContainer> {
             for (Ingredient ing : pRecipe.recipeItems ){
                 ing.toNetwork(pBuffer);
             }
-            pBuffer.writeItemStack(pRecipe.getResultItem(), false);
+            pBuffer.writeItemStack(pRecipe.output, false); //was before ´pRecipe.getResultItem()´
         }
 
         @Override
