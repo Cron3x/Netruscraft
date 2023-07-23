@@ -20,7 +20,7 @@ public final class ItemRegister {
     public static final RegistryObject<Item> TIME_RUNE_BLOCK_ITEM = ITEMS.register("rune_time", () -> new BlockItem(TIME_RUNE.get(), new Item.Properties()));
     public static final RegistryObject<Item> CEILING_RUNE_BLOCK_ITEM = ITEMS.register("rune_ceiling", () -> new BlockItem(CEILING_RUNE.get(), new Item.Properties()));
 
-    public static final RegistryObject<Item> GLASS_WAND = ITEMS.register("glass_wand", () -> new GlassWantItem(new Item.Properties()));
+    public static final RegistryObject<Item> GLASS_WAND = ITEMS.register("glass_wand", () -> new GlassWantItem((new Item.Properties()).stacksTo(1)));
     public static final RegistryObject<Item> OPAL_ITEM = ITEMS.register("opal", () -> new Item(new Item.Properties()));
 
     public static final RegistryObject<Item> RUNE_BLANK = ITEMS.register("rune_blank", () -> new Item(new Item.Properties()));
@@ -30,5 +30,7 @@ public final class ItemRegister {
     public static final RegistryObject<Item> RUNE_TIME_MORNING = ITEMS.register("rune_time_morning", () -> new Item(new Item.Properties()));
 
     public static final RegistryObject<Item> WHETSTONE = ITEMS.register("whetstone", () -> new WhetstoneItem((new Item.Properties()).stacksTo(1)));
+
+    public static final RegistryObject<Item> TESTITEM = ITEMS.register("test_item", () -> new TestItem(new Item.Properties()));
 
     }

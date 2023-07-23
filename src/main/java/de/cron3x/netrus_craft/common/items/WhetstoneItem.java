@@ -61,6 +61,14 @@ public class WhetstoneItem extends Item {
         carrierId = carrierId.equals("") ? "raw" : carrierId;
         carrierLevel = whetstoneTag.getInt("lvl");
 
+
+        List<Component> hoverText = List.of(Component.empty());
+
+        TooltipFlag enable_featureflag = carrier.getItem().isEnabled(player.level().enabledFeatures()) ? TooltipFlag.ADVANCED : TooltipFlag.NORMAL;
+        System.out.println("enable_featureflag >> " + enable_featureflag);
+
+        carrier.getItem().appendHoverText(carrier, player.level(), hoverText, enable_featureflag);
+
         // Save new NBT on Tool
         CompoundTag newCarrierNBT = new CompoundTag();
         newCarrierNBT.putString("id", selfId);
@@ -77,8 +85,37 @@ public class WhetstoneItem extends Item {
         return true;
     }
 
+    //TODO: Add color Codes, for more custom colors
     @Override
     public void appendHoverText(ItemStack stack, Level level, List<Component> components, TooltipFlag flag) {
-        components.add(Component.translatable("item.netruscraft.whetstone_raw.description").withStyle(ChatFormatting.GRAY));
+        CompoundTag nbt = stack.getTag();
+        if (nbt == null) components.add(Component.translatable("item.netruscraft.whetstone.none_nbt").withStyle(ChatFormatting.GRAY));
+        else {
+            components = whetstoneHoverTextComponentSwitcher(components,stack);
+        }
+    }
+    public List<Component> whetstoneHoverTextComponentSwitcher(List<Component> components, ItemStack stack){
+        CompoundTag nbt = stack.getTag();
+        switch (stack.getTag().getString("id")) {
+            case "fire" ->
+                    components.add(Component.translatable("item.netruscraft.whetstone.fire.description").withStyle(ChatFormatting.GOLD));
+            case "rot" ->
+                    components.add(Component.translatable("item.netruscraft.whetstone.rot.description").withStyle(ChatFormatting.DARK_RED));
+            case "bleed" ->
+                    components.add(Component.translatable("item.netruscraft.whetstone.bleed.description").withStyle(ChatFormatting.RED));
+            case "lightning" ->
+                    components.add(Component.translatable("item.netruscraft.whetstone.lightning.description").withStyle(ChatFormatting.AQUA));
+            case "holy" ->
+                    components.add(Component.translatable("item.netruscraft.whetstone.holy.description").withStyle(ChatFormatting.YELLOW));
+            case "poison" ->
+                    components.add(Component.translatable("item.netruscraft.whetstone.poison.description").withStyle(ChatFormatting.GREEN));
+            case "raw" ->
+                    components.add(Component.translatable("item.netruscraft.whetstone.raw.description").withStyle(ChatFormatting.GRAY));
+            default ->
+                    components.add(Component.translatable("item.netruscraft.whetstone.none_nbt").withStyle(ChatFormatting.RED));
+        }
+        components.add(Component.translatable("item.netruscraft.whetstone.level").withStyle(ChatFormatting.GRAY).append(""+nbt.getInt("lvl")));
+
+        return components;
     }
 }

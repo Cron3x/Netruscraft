@@ -1,0 +1,6 @@
+{
+  "parent": "netruscraft:item/whetstone",
+  "textures": {
+    "layer0": "netruscraft:item/whetstone_rot"
+  }
+}
