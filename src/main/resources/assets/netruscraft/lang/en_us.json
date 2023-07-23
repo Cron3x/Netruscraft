@@ -3,5 +3,14 @@
   "block.netruscraft.pedestal" : "Pedestal",
   "item.netruscraft.craftingaltar" : "Crafting Altar",
   "block.netruscraft.craftingaltar" : "Crafting Altar",
-  "item_group.netruscraft.netrus_tab" : "NetrusCraft Tab"
+  "item_group.netruscraft.netrus_tab" : "NetrusCraft Tab",
+  "item.netruscraft.whetstone_raw": "Raw Whetstone",
+  "item.netruscraft.whetstone_raw.description": "Removes Infusions from Tools",
+  "item.netruscraft.whetstone_raw.level": "Level: ",
+  "item.netruscraft.whetstone_fire": "Whetstone of Fire",
+  "item.netruscraft.whetstone_bleed": "Whetstone of Bleeding",
+  "item.netruscraft.whetstone_holy": "Holy Whetstone",
+  "item.netruscraft.whetstone_rot": "Rotten Whetstone",
+  "item.netruscraft.whetstone_lightning": "Whetstone of Lightning",
+  "item.netruscraft.whetstone_poison": "Whetstone of Poison"
 }

@@ -33,7 +33,6 @@ import java.util.List;
 import java.util.Optional;
 
 import de.cron3x.netrus_craft.api.NetrusAPI;
-import oshi.util.tuples.Pair;
 
 import static de.cron3x.netrus_craft.common.blocks.crafting_altar_handler.CraftingAltarParticleHandler.*;
 
@@ -91,39 +90,34 @@ public class CraftingAltarBlockEntity extends BlockEntity implements Tickable {
                     update();
                 }
             }
-
-            if (isCrafting){
-                System.out.println("isCrafting: true ("+ this.crafting_timer +")");
-                if (connectedPedestals.isEmpty() && this.crafting_timer >= 15) {
-                    System.out.println("Empty now: if (connectedPedestals.isEmpty() && this.crafting_timer >= 15)");
-                    this.setShowItem(true);
+        }
+        if (level != null && !(level.isClientSide) && isCrafting){
+            System.out.println("isCrafting: true ("+ this.crafting_timer +")");
+            if (connectedPedestals.isEmpty() && this.crafting_timer >= 15) {
+                System.out.println("Empty now: if (connectedPedestals.isEmpty() && this.crafting_timer >= 15)");
+                this.showResultItem = true;
+                this.isCrafting = false;
+                particleCircle(ParticleTypes.ENCHANT, this.getBlockPos().above(), 1);
+                this.update();
+            } else if (this.crafting_timer >= 50) {
+                System.out.println("timer >= 50");
+                this.crafting_timer = 0;
+                BlockPos pedestalPos = this.connectedPedestals.get(0);
+                //this.connectedPedestals.set(this.connectedPedestals.size()-1, pedestalPos);
+                this.connectedPedestals.remove(0);
+                boolean continueCraft = consumeCraftingItem(pedestalPos);
+                if  (!continueCraft) {
+                    setCraftingResult(this, ItemStack.EMPTY);
                     this.isCrafting = false;
-                    particleCircle(ParticleTypes.ENCHANT, this.getBlockPos().above(), 1);
-
-                    for (BlockPos pedestalPos : this.connectedPedestals) {
-                        consumeraftingItem(pedestalPos);
-                    }
-
-                    update();
-                } else if (this.crafting_timer >= 50) {
-                    System.out.println("timer >= 50");
-                    this.crafting_timer = 0;
-                    BlockPos pedestalPos = this.connectedPedestals.get(0);
-                    this.connectedPedestals.remove(0);
-                    this.connectedPedestals.set(this.connectedPedestals.size()-1, pedestalPos);
-                    boolean continueCraft = hideCraftingItem(pedestalPos);
-                    if  (!continueCraft) {
-                        setCraftingResult(this, ItemStack.EMPTY);
-                        this.isCrafting = false;
-                        update();
-                    }
                 }
+                update();
+            }
 
-                if (this.crafting_timer > 55) {
-                    System.out.println("timer > 500");
-                    this.crafting_timer = 0;
-                    this.setIsCrafting(false);
-                }
+            if (this.crafting_timer > 55) {
+                System.out.println("timer > 500");
+                this.crafting_timer = 0;
+                this.setIsCrafting(false);
+                update();
             }
         }
     }
@@ -160,30 +154,18 @@ public class CraftingAltarBlockEntity extends BlockEntity implements Tickable {
         particleCircle(ParticleTypes.ASH, altar.getBlockPos().above(), 1);
     }
 
-    public boolean consumeraftingItem(BlockPos pedestalPos){
-
+    public boolean consumeCraftingItem(BlockPos pedestalPos){
         PedestalBlockEntity pedestal = (PedestalBlockEntity) Minecraft.getInstance().level.getBlockEntity(pedestalPos);
-
+        System.out.println("pedestal ?= null");
         if (pedestal == null) return false;
-
-        if (pedestal.getDisplayItem(true).isEmpty()) return true;
+        System.out.println("pedestal != null");
+        if (pedestal.getDisplayItem(true, true).isEmpty()) return false;
+        System.out.println("pedestal not empty");
         particleCircle(ParticleTypes.ENCHANT, pedestal.getBlockPos(), 0.4);
-        pedestal.setItem(ItemStack.EMPTY, false);
+        ItemStack oItem = pedestal.getDisplayItem(false,true);
+        //pedestal.setItem(new ItemStack(Items.AIR), false);
         return true;
     }
-
-    public boolean hideCraftingItem(BlockPos pedestalPos){
-
-        PedestalBlockEntity pedestal = (PedestalBlockEntity) Minecraft.getInstance().level.getBlockEntity(pedestalPos);
-
-        if (pedestal == null) return false;
-
-        if (pedestal.getDisplayItem(true).isEmpty()) return true;
-        particleCircle(ParticleTypes.ENCHANT, pedestal.getBlockPos(), 0.4);
-        pedestal.getDisplayItem(false);
-        return true;
-    }
-
     public boolean hasRecipe(CraftingAltarBlockEntity altar){
         System.out.println("hasRecipe");
         Level level = altar.level;

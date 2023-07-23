@@ -1,6 +1,7 @@
 package de.cron3x.netrus_craft.common.blocks.entity;
 
 
+import de.cron3x.netrus_craft.client.renderers.PedestalRenderer;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.Connection;
@@ -19,14 +20,12 @@ import org.jetbrains.annotations.NotNull;
 import javax.annotation.Nullable;
 
 public class PedestalBlockEntity extends BlockEntity {
-
     private final ItemStackHandler inventory = new ItemStackHandler(1);
     private final LazyOptional<IItemHandler> optional = LazyOptional.of(() -> this.inventory);
 
     public PedestalBlockEntity(BlockPos pos, BlockState state) {
         super(BlockEntityRegister.PEDESTAL.get(), pos, state);
     }
-
 
     public ItemStack setItem(ItemStack itemStack, Boolean simulate){
         IItemHandler h = optional.orElse(null);
@@ -35,11 +34,17 @@ public class PedestalBlockEntity extends BlockEntity {
         return returner;
     }
 
-    public ItemStack getDisplayItem(Boolean simulate) {
+    public ItemStack getDisplayItem(boolean simulate, boolean dbg) {
         IItemHandler h = optional.orElse(null);
-        ItemStack returner = h.extractItem(0,1,simulate);
+        if (h == null) System.out.println("IItemHandler is null");
+        ItemStack returner = h.extractItem(0,1, simulate);
+        if (dbg)  System.out.println("intertItem return" + returner);
         if(!simulate) update();
         return returner;
+    }
+
+    public ItemStack getDisplayItem(boolean simulate) {
+        return getDisplayItem(simulate, false);
     }
 
     @Override
@@ -77,7 +82,6 @@ public class PedestalBlockEntity extends BlockEntity {
 
     @Override
     public CompoundTag getUpdateTag() {
-        
         return save(new CompoundTag());
     }
 

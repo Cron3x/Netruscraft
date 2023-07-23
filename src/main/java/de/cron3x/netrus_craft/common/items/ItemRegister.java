@@ -28,4 +28,7 @@ public final class ItemRegister {
     public static final RegistryObject<Item> RUNE_TIME_NIGHT = ITEMS.register("rune_time_night", () -> new Item(new Item.Properties()));
     public static final RegistryObject<Item> RUNE_TIME_EVENING = ITEMS.register("rune_time_evening", () -> new Item(new Item.Properties()));
     public static final RegistryObject<Item> RUNE_TIME_MORNING = ITEMS.register("rune_time_morning", () -> new Item(new Item.Properties()));
-}
+
+    public static final RegistryObject<Item> WHETSTONE = ITEMS.register("whetstone", () -> new WhetstoneItem((new Item.Properties()).stacksTo(1)));
+
+    }
