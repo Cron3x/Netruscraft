@@ -46,10 +46,6 @@ public class WoodenCatalystItem extends Item implements GeoItem {
 
     @Override
     public void registerControllers(AnimatableManager.ControllerRegistrar controllers) {
-        /*controllers.add(new AnimationController<>(this, "LoopController", 2, state -> PlayState.CONTINUE)
-                .triggerableAnim("idle", DefaultAnimations.IDLE)
-
-        );*/
         controllers.add(new AnimationController<>(this, "Controller", 2, animationState -> PlayState.STOP)
                 .triggerableAnim("use", DefaultAnimations.ITEM_ON_USE));
     }
