@@ -31,6 +31,8 @@ public final class ItemRegister {
 
     public static final RegistryObject<Item> WHETSTONE = ITEMS.register("whetstone", () -> new WhetstoneItem((new Item.Properties()).stacksTo(1)));
 
-    public static final RegistryObject<Item> TESTITEM = ITEMS.register("test_item", () -> new TestItem(new Item.Properties()));
+    public static final RegistryObject<Item> TESTITEM = ITEMS.register("test_item", () -> new TestItem(new Item.Properties())); //TODO: Remove
+
+    public static final RegistryObject<Item> WOODEN_CATALYST = ITEMS.register("wooden_catalyst", () -> new WoodenCatalystItem(new Item.Properties()));
 
     }

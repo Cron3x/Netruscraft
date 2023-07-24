@@ -99,6 +99,7 @@ public class NetrusCraft
             event.accept(ItemRegister.RUNE_TIME_NIGHT);
             event.accept(ItemRegister.RUNE_BLANK);
             event.accept(ItemRegister.WHETSTONE);
+            event.accept(ItemRegister.WOODEN_CATALYST);
         }
     }
     // You can use EventBusSubscriber to automatically register all static methods in the class annotated with @SubscribeEvent
