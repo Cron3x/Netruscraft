@@ -2,6 +2,7 @@ package de.cron3x.netruscraft.common.networking;
 
 import de.cron3x.netruscraft.NetrusCraft;
 import de.cron3x.netruscraft.common.networking.packets.CycleSpellC2SPacket;
+import de.cron3x.netruscraft.common.networking.packets.CycleSpellS2CPacket;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraftforge.network.NetworkDirection;
@@ -9,7 +10,7 @@ import net.minecraftforge.network.NetworkRegistry;
 import net.minecraftforge.network.PacketDistributor;
 import net.minecraftforge.network.simple.SimpleChannel;
 
-public class ModPackages {
+public class PackageManager {
     private static SimpleChannel INSTANCE;
 
     private static int packageId = 0;
@@ -30,6 +31,12 @@ public class ModPackages {
                 .decoder(CycleSpellC2SPacket::new)
                 .encoder(CycleSpellC2SPacket::toBytes)
                 .consumerMainThread(CycleSpellC2SPacket::handle)
+                .add();
+
+        instance.messageBuilder(CycleSpellS2CPacket.class, id(), NetworkDirection.PLAY_TO_CLIENT)
+                .decoder(CycleSpellS2CPacket::new)
+                .encoder(CycleSpellS2CPacket::toBytes)
+                .consumerMainThread(CycleSpellS2CPacket::handle)
                 .add();
     }
 

@@ -6,7 +6,7 @@ import de.cron3x.netruscraft.common.blocks.BlockRegister;
 import de.cron3x.netruscraft.common.blocks.entity.BlockEntityRegister;
 import de.cron3x.netruscraft.common.creativemodetab.TabRegister;
 import de.cron3x.netruscraft.common.items.ItemRegister;
-import de.cron3x.netruscraft.common.networking.ModPackages;
+import de.cron3x.netruscraft.common.networking.PackageManager;
 import de.cron3x.netruscraft.common.recipe.RecipeRegister;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.BuildCreativeModeTabContentsEvent;
@@ -34,6 +34,7 @@ public class NetrusCraft
         IEventBus modEventBus = FMLJavaModLoadingContext.get().getModEventBus();
 
         modEventBus.addListener(this::addCreative);
+        modEventBus.addListener(this::commonSetup);
 
         TabRegister.CREATIVE_MODE_TAB_DEFERRED_REGISTER.register(modEventBus);
         BlockRegister.BLOCKS.register(modEventBus);
@@ -67,7 +68,7 @@ public class NetrusCraft
     }
     private void commonSetup(final FMLCommonSetupEvent event) {
         event.enqueueWork(() -> {
-            ModPackages.register();
+            PackageManager.register();
         });
     }
 }

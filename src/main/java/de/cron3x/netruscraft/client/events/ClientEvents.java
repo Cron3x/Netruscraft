@@ -1,13 +1,14 @@
 package de.cron3x.netruscraft.client.events;
 
 import de.cron3x.netruscraft.NetrusCraft;
+import de.cron3x.netruscraft.client.huds.SelectedSpellHUDOverlay;
 import de.cron3x.netruscraft.client.renderers.CraftingAltarRenderer;
 import de.cron3x.netruscraft.client.renderers.CraftingObeliskRenderer;
 import de.cron3x.netruscraft.client.renderers.PedestalRenderer;
 import de.cron3x.netruscraft.common.blocks.entity.BlockEntityRegister;
 import de.cron3x.netruscraft.common.items.ItemRegister;
 import de.cron3x.netruscraft.common.items.WhetstoneItem;
-import de.cron3x.netruscraft.common.networking.ModPackages;
+import de.cron3x.netruscraft.common.networking.PackageManager;
 import de.cron3x.netruscraft.common.networking.packets.CycleSpellC2SPacket;
 import de.cron3x.netruscraft.common.utils.KeyBinding;
 import net.minecraft.client.renderer.item.ItemProperties;
@@ -15,6 +16,7 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.client.event.EntityRenderersEvent;
 import net.minecraftforge.client.event.InputEvent;
+import net.minecraftforge.client.event.RegisterGuiOverlaysEvent;
 import net.minecraftforge.client.event.RegisterKeyMappingsEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
@@ -41,6 +43,11 @@ public class ClientEvents {
         public static void onKeyRegister(RegisterKeyMappingsEvent event){
             event.register(KeyBinding.KEY_SWITCH_SPELL);
         }
+
+        @SubscribeEvent
+        public static void onRegisterGuiOverlays(RegisterGuiOverlaysEvent event){
+            event.registerAboveAll("selected_spell", SelectedSpellHUDOverlay.HUD_SPELL_SELECTION);
+        }
     }
 
     @Mod.EventBusSubscriber(modid = NetrusCraft.MODID, value = Dist.CLIENT)
@@ -48,7 +55,7 @@ public class ClientEvents {
         @SubscribeEvent
         public static void onKeyInput(InputEvent.Key event){
             if (KeyBinding.KEY_SWITCH_SPELL.consumeClick()) {
-                ModPackages.sendToServer(new CycleSpellC2SPacket());
+                PackageManager.sendToServer(new CycleSpellC2SPacket());
             }
         }
     }

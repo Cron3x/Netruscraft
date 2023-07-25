@@ -108,8 +108,8 @@ public class CatalystItem extends Item {
     public static int getSpellBufferIndex(ItemStack stack){
         if (!stack.hasTag()) stack.setTag(new CompoundTag());
         if (stack.getTag().contains("spell_buffer_index")) return stack.getTag().getInt("spell_buffer_index");
-        setSpellBufferSize(stack, 1);
-        return 1;
+        setSpellBufferIndex(stack, 0);
+        return 0;
     }
 
     public static void setSpellBufferSize(ItemStack stack, int size){
