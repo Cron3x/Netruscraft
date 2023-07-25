@@ -28,8 +28,8 @@ minecraft {
     //
     // Use non-default mappings at your own risk. They may not always work.
     // Simply re-run your setup task after changing the mappings to update your workspace.
-    //mappings channel: 'parchment', version: '2023.07.16-1.20.1'
-    mappings channel: 'official', version: '1.20.1'
+    mappings channel: 'parchment', version: '2023.07.23-1.20.1'
+    //mappings channel: 'official', version: '1.20.1'
 
     // accessTransformer = file('src/main/resources/META-INF/accesstransformer.cfg') // Currently, this location cannot be changed from the default.
 
@@ -129,6 +129,10 @@ repositories {
         name = "ModMaven"
         url = "https://modmaven.dev"
     }
+    maven {
+        name = 'GeckoLib'
+        url 'https://dl.cloudsmith.io/public/geckolib3/geckolib/maven/'
+    }
 }
 
 dependencies {
@@ -151,7 +155,7 @@ dependencies {
     // http://www.gradle.org/docs/current/userguide/artifact_dependencies_tutorial.html
     // http://www.gradle.org/docs/current/userguide/dependency_management.html
 
-
+    implementation fg.deobf('software.bernie.geckolib:geckolib-forge-1.20:4.2')
 }
 
 // Example for how to get properties into the manifest for reading at runtime.
@@ -160,7 +164,7 @@ jar {
         attributes([
                 "Specification-Title"     : "netruscraft",
                 "Specification-Vendor"    : "cron3x",
-                "Specification-Version"   : "1", // We are version 1 of ourselves
+                "Specification-Version"   : "0.1.0", // We are version 1 of ourselves
                 "Implementation-Title"    : project.name,
                 "Implementation-Version"  : project.jar.archiveVersion,
                 "Implementation-Vendor"   : "cron3x",
