@@ -13,5 +13,8 @@
   "item.netruscraft.whetstone.holy.description": "Holy Whetstone",
   "item.netruscraft.whetstone.rot.description": "Rotten Whetstone",
   "item.netruscraft.whetstone.lightning.description": "Whetstone of Lightning",
-  "item.netruscraft.whetstone.poison.description": "Whetstone of Poison"
+  "item.netruscraft.whetstone.poison.description": "Whetstone of Poison",
+  "item.netruscraft.wooden_catalyst" : "Wooden Catalyst",
+  "key.etruscraft.switch_spell": "Cycle Spells",
+  "key.category.netruscraft.keybinds": "NetrusCraft"
 }
