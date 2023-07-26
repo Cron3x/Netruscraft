@@ -29,7 +29,6 @@ public class NetrusCraft
     public static final String MODID = "netruscraft";
     private static final Logger LOGGER = LogUtils.getLogger();
 
-
     public NetrusCraft() {
         IEventBus modEventBus = FMLJavaModLoadingContext.get().getModEventBus();
 
@@ -53,7 +52,6 @@ public class NetrusCraft
 
     private void addCreative(BuildCreativeModeTabContentsEvent event) {
         if (event.getTab() == TabRegister.MAIN_TAB.get()) {
-
             event.accept(ItemRegister.PEDESTAL_BLOCK_ITEM);
             event.accept(ItemRegister.CRAFTINGALTAR_BLOCK_ITEM);
             event.accept(ItemRegister.CRAFTINGOBELISK_BLOCK_ITEM);
@@ -68,6 +66,7 @@ public class NetrusCraft
             event.accept(ItemRegister.RUNE_BLANK);
             event.accept(ItemRegister.WHETSTONE);
             event.accept(ItemRegister.WOODEN_CATALYST);
+            event.accept(ItemRegister.CATALYST_ADVANCE_RUNE_SIZE);
         }
     }
     private void commonSetup(final FMLCommonSetupEvent event) {

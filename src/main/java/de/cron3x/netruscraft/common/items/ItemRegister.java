@@ -1,6 +1,7 @@
 package de.cron3x.netruscraft.common.items;
 
 import de.cron3x.netruscraft.NetrusCraft;
+import de.cron3x.netruscraft.common.items.catalyst_runes.SizeIncreaseRune;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.Item;
 import net.minecraftforge.registries.DeferredRegister;
@@ -31,4 +32,5 @@ public final class ItemRegister {
 
     public static final RegistryObject<Item> WOODEN_CATALYST = ITEMS.register("wooden_catalyst", () -> new WoodenCatalystItem((new Item.Properties()).stacksTo(1)));
 
-    }
+    public static final RegistryObject<Item> CATALYST_ADVANCE_RUNE_SIZE = ITEMS.register("catalyst_advance_rune_size", () -> new SizeIncreaseRune(new Item.Properties()));
+}

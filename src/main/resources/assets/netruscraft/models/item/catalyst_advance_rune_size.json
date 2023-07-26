@@ -1,0 +1,6 @@
+{
+  "parent": "minecraft:item/generated",
+  "textures": {
+    "layer0": "netruscraft:item/catalyst_advance_rune_size"
+  }
+}
