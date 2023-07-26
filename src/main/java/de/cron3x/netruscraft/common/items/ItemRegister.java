@@ -12,8 +12,6 @@ import static de.cron3x.netruscraft.common.blocks.BlockRegister.*;
 public final class ItemRegister {
     public static final DeferredRegister<Item> ITEMS = DeferredRegister.create(ForgeRegistries.ITEMS, NetrusCraft.MODID);
 
-    // Creates a new Block with the id "examplemod:example_block", combining the namespace and path
-    // Creates a new BlockItem with the id "examplemod:example_block", combining the namespace and path
     public static final RegistryObject<Item> PEDESTAL_BLOCK_ITEM = ITEMS.register("pedestal", () -> new BlockItem(PEDESTAL_BLOCK.get(), new Item.Properties()));
     public static final RegistryObject<Item> CRAFTINGALTAR_BLOCK_ITEM = ITEMS.register("craftingaltar", () -> new BlockItem(CRAFTINGALTAR_BLOCK.get(), new Item.Properties()));
     public static final RegistryObject<Item> CRAFTINGOBELISK_BLOCK_ITEM = ITEMS.register("craftingobelisk", () -> new BlockItem(CRAFTINGOBELISK_BLOCK.get(), new Item.Properties()));

@@ -4,6 +4,8 @@ import net.minecraft.core.NonNullList;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.nbt.Tag;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.InteractionResultHolder;
 import net.minecraft.world.entity.SlotAccess;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.ClickAction;
@@ -12,6 +14,7 @@ import net.minecraft.world.inventory.tooltip.BundleTooltip;
 import net.minecraft.world.inventory.tooltip.TooltipComponent;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.Level;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Optional;
@@ -131,5 +134,23 @@ public class CatalystItem extends Item {
         NonNullList<ItemStack> nonnulllist = NonNullList.create();
         getSpells(pStack).forEach(nonnulllist::add);
         return Optional.of(new BundleTooltip(nonnulllist, getSpellBufferSize(pStack)));
+    }
+
+    @Override
+    public InteractionResultHolder<ItemStack> use(Level pLevel, Player pPlayer, InteractionHand pUsedHand) {
+        castSpell(pLevel, pPlayer, pUsedHand);
+        return super.use(pLevel, pPlayer, pUsedHand);
+    }
+
+    public void castSpell(Level pLevel, Player pPlayer, InteractionHand pUsedHand){
+        ItemStack catalyst;
+        if (pPlayer.getMainHandItem().getItem() instanceof CatalystItem) {
+            catalyst = pPlayer.getMainHandItem();
+        } else if (pPlayer.getOffhandItem().getItem() instanceof CatalystItem) {
+            catalyst = pPlayer.getMainHandItem();
+        } else return;
+
+        //ItemStack spell = CatalystItem.getSpells(catalyst).toArray(ItemStack[]::new)[CatalystItem.getSpellBufferIndex(catalyst)];
+
     }
 }

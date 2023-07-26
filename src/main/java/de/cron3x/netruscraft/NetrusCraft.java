@@ -36,15 +36,19 @@ public class NetrusCraft
         modEventBus.addListener(this::addCreative);
         modEventBus.addListener(this::commonSetup);
 
+        registerDeferredRegs(modEventBus);
+
+        MinecraftForge.EVENT_BUS.register(this);
+
+    }
+
+    private void registerDeferredRegs(IEventBus modEventBus){
         TabRegister.CREATIVE_MODE_TAB_DEFERRED_REGISTER.register(modEventBus);
         BlockRegister.BLOCKS.register(modEventBus);
         ItemRegister.ITEMS.register(modEventBus);
         BlockEntityRegister.BLOCK_ENTITIES.register(modEventBus);
         ParticleRegister.PARTICLES.register(modEventBus);
         RecipeRegister.RECIPE_SERIALIZERS.register(modEventBus);
-
-        MinecraftForge.EVENT_BUS.register(this);
-
     }
 
     private void addCreative(BuildCreativeModeTabContentsEvent event) {
