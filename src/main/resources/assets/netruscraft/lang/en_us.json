@@ -1,0 +1,20 @@
+{
+  "item.netruscraft.pedestal" : "Pedestal",
+  "block.netruscraft.pedestal" : "Pedestal",
+  "item.netruscraft.craftingaltar" : "Crafting Altar",
+  "block.netruscraft.craftingaltar" : "Crafting Altar",
+  "item_group.netruscraft.netrus_tab" : "Netruscraft Tab",
+  "item.netruscraft.whetstone": "Whetstone",
+  "item.netruscraft.whetstone.none_nbt": "This Item doesn't contain any infusions for your sword",
+  "item.netruscraft.whetstone.level": "Level: ",
+  "item.netruscraft.whetstone.raw.description": "Removes Infusions from Tools",
+  "item.netruscraft.whetstone.fire.description": "Whetstone of Fire",
+  "item.netruscraft.whetstone.bleed.description": "Whetstone of Bleeding",
+  "item.netruscraft.whetstone.holy.description": "Holy Whetstone",
+  "item.netruscraft.whetstone.rot.description": "Rotten Whetstone",
+  "item.netruscraft.whetstone.lightning.description": "Whetstone of Lightning",
+  "item.netruscraft.whetstone.poison.description": "Whetstone of Poison",
+  "item.netruscraft.wooden_catalyst" : "Wooden Catalyst",
+  "key.etruscraft.switch_spell": "Cycle Spells",
+  "key.category.netruscraft.keybinds": "Netruscraft"
+}

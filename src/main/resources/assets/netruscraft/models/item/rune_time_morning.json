@@ -1,0 +1,7 @@
+{
+  "parent": "minecraft:item/generated",
+  "textures": {
+    "layer0": "netruscraft:item/rune",
+    "layer1": "netruscraft:block/rune/time/morning"
+  }
+}

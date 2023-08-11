@@ -1,0 +1,22 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "P",
+    "Y",
+    "O"
+  ],
+  "key": {
+    "Y": {
+      "item": "minecraft:yellow_stained_glass"
+    },
+    "P": {
+      "item": "minecraft:purple_stained_glass"
+    },
+    "O": {
+      "item": "netruscraft:opal"
+    }
+  },
+  "result": {
+    "item": "netruscraft:glass_wand"
+  }
+}

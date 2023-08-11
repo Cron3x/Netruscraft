@@ -1,0 +1,26 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    " / ",
+    "_A_",
+    " C "
+  ],
+  "key": {
+    "/": {
+      "item": "minecraft:stick"
+    },
+    "_": {
+      "item": "minecraft:cherry_slab"
+    },
+    "A": {
+      "item": "minecraft:amethyst_shard"
+    },
+    "C": {
+      "item": "minecraft:cherry_log"
+    }
+  },
+  "result": {
+    "item": "netruscraft:wooden_catalyst",
+    "count": 1
+  }
+}

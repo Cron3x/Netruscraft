@@ -1,0 +1,14 @@
+{
+  "parent": "minecraft:item/generated",
+  "textures": {
+    "layer0": "netruscraft:item/whetstone_raw"
+  },
+  "overrides": [
+    { "predicate": { "netruscraft:whetstone_id": 1.0 }, "model": "netruscraft:item/whetstone_fire" },
+    { "predicate": { "netruscraft:whetstone_id": 2.0 }, "model": "netruscraft:item/whetstone_poison" },
+    { "predicate": { "netruscraft:whetstone_id": 3.0 }, "model": "netruscraft:item/whetstone_bleed" },
+    { "predicate": { "netruscraft:whetstone_id": 4.0 }, "model": "netruscraft:item/whetstone_rot" },
+    { "predicate": { "netruscraft:whetstone_id": 5.0 }, "model": "netruscraft:item/whetstone_holy" },
+    { "predicate": { "netruscraft:whetstone_id": 6.0 }, "model": "netruscraft:item/whetstone_lightning" }
+  ]
+}

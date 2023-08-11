@@ -1,0 +1,8 @@
+{
+  "parent": "netruscraft:block/layered_block",
+  "textures": {
+    "block": "minecraft:block/polished_blackstone",
+    "overlay": "netruscraft:block/rune/rune_b",
+    "particle": "minecraft:block/polished_blackstone"
+  }
+}
