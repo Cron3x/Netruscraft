@@ -77,6 +77,8 @@ public class WhetstoneItem extends Item {
         carrierNBT.put("whetstone", newCarrierNBT);
         carrier.setTag(carrierNBT);
 
+        if ( selfNBT == null) selfNBT = new CompoundTag();
+
         // Save new NBT on Whetstone
         selfNBT.putString("id", carrierId);
         selfNBT.putInt("lvl", carrierLevel);

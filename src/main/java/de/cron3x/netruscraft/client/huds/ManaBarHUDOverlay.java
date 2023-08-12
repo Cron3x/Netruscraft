@@ -10,7 +10,7 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.client.gui.overlay.IGuiOverlay;
 
-public class SelectedSpellHUDOverlay {
+public class ManaBarHUDOverlay {
     private static final ResourceLocation HUD_TEXTURE_ATLAS = new ResourceLocation(Netruscraft.MODID, "textures/gui/hud.png");
     public static final IGuiOverlay HUD_SPELL_SELECTION = ((gui, guiGraphics, partialTick, screenWidth, screenHeight) -> {
         Player player = Minecraft.getInstance().player;
